@@ -1,9 +1,22 @@
 <script setup lang="ts">
+import ColoredChip from '@/components/Core/ColoredChip.vue'
 import ConfirmDeleteDialog from '@/components/Dialogs/ConfirmDeleteDialog.vue'
 import MoveTorrentDialog from '@/components/Dialogs/MoveTorrentDialog.vue'
 import MoveTorrentFileDialog from '@/components/Dialogs/MoveTorrentFileDialog.vue'
-import { FilePriority, TorrentState } from '@/constants/qbit'
-import { formatData, formatDataUnit, formatDataValue, formatPercent, formatSpeed, getDomainBody, splitByUrl, stringContainsUrl } from '@/helpers'
+import { FilePriority } from '@/constants/qbit'
+import { TorrentState } from '@/constants/vuetorrent'
+import {
+  formatData,
+  formatDataUnit,
+  formatDataValue,
+  formatPercent,
+  formatSpeed,
+  getRatioColor,
+  getTorrentStateColor,
+  getTorrentStateValue,
+  splitByUrl,
+  stringContainsUrl
+} from '@/helpers'
 import { useContentStore, useDialogStore, useTorrentDetailStore, useVueTorrentStore } from '@/stores'
 import { Torrent } from '@/types/vuetorrent'
 import { storeToRefs } from 'pinia'
@@ -15,7 +28,8 @@ import PieceCanvas from './PieceCanvas.vue'
 const props = defineProps<{ torrent: Torrent; isActive: boolean }>()
 
 const { t } = useI18n()
-const { cachedFiles } = storeToRefs(useContentStore())
+const contentStore = useContentStore()
+const { cachedFiles } = storeToRefs(contentStore)
 const dialogStore = useDialogStore()
 const { properties } = storeToRefs(useTorrentDetailStore())
 const vuetorrentStore = useVueTorrentStore()
@@ -31,9 +45,13 @@ const torrentPieceOwned = computed(() => properties.value?.pieces_have ?? 0)
 const torrentPieceCount = computed(() => properties.value?.pieces_num ?? 0)
 const uploadSpeedAvg = computed(() => properties.value?.up_speed_avg ?? 0)
 
-const torrentStateColor = computed(() => `torrent-${props.torrent.state}`)
+const torrentStateColor = computed(() => getTorrentStateColor(props.torrent.state))
 const pieceSize = computed(() => `${parseInt(formatDataValue(torrentPieceSize.value, true))} ${formatDataUnit(torrentPieceSize.value, true)}`)
-const isFetchingMetadata = computed(() => props.torrent.state === TorrentState.META_DL)
+const isFetchingMetadata = computed(() => [TorrentState.META_DOWNLOAD, TorrentState.FORCED_META_DOWNLOAD].includes(props.torrent.state))
+const ratioColor = computed(() => {
+  if (!vuetorrentStore.enableRatioColors) return ''
+  return getRatioColor(props.torrent.ratio)
+})
 
 async function copyHash() {
   try {
@@ -55,7 +73,7 @@ function openMoveTorrentFileDialog() {
     hash: props.torrent.hash,
     isFolder: false,
     oldName: torrentFileName.value
-  })
+  }, contentStore.updateFileTreeTask.perform)
 }
 
 function handleKeyboardShortcuts(e: KeyboardEvent) {
@@ -184,31 +202,25 @@ onUnmounted(async () => {
           <v-row>
             <v-col cols="6">
               <div>{{ $t('torrent.properties.state') }}:</div>
-              <v-chip variant="flat" :color="torrentStateColor">{{ $t(`torrent.state.${torrent.state}`) }}</v-chip>
+              <ColoredChip :disabled="true" :default-color="torrentStateColor" :value="$t(`torrent.state.${getTorrentStateValue(torrent.state)}`)" />
             </v-col>
             <v-col cols="6">
               <div>{{ $t('torrent.properties.category') }}:</div>
-              <v-chip variant="flat" color="category">
-                {{ torrent.category.length ? torrent.category : $t('navbar.side.filters.uncategorized') }}
-              </v-chip>
+              <ColoredChip default-color="category" :disabled="!torrent.category.length" :disabled-value="$t('navbar.side.filters.uncategorized')" :value="torrent.category" />
             </v-col>
           </v-row>
 
           <v-row>
             <v-col cols="6">
               <div>{{ $t('torrent.properties.tracker') }}:</div>
-              <v-chip variant="flat" color="tracker">
-                {{ torrent.tracker ? getDomainBody(torrent.tracker) : $t('navbar.side.filters.untracked') }}
-              </v-chip>
+              <ColoredChip :disabled="!torrent.trackerDomain.length" default-color="tracker" :disabled-value="$t('navbar.side.filters.untracked')" :value="torrent.trackerDomain" />
             </v-col>
-            <v-col cols="6" class="d-flex flex-wrap chipgap">
+            <v-col cols="6">
               <div>{{ $t('torrent.properties.tags') }}:</div>
-              <v-chip v-if="torrent.tags" v-for="tag in torrent.tags" :key="tag" variant="flat" color="tag">
-                {{ tag }}
-              </v-chip>
-              <v-chip v-if="!torrent.tags || torrent.tags.length === 0" variant="flat" color="tag">
-                {{ $t('navbar.side.filters.untagged') }}
-              </v-chip>
+              <div v-if="torrent.tags.length" class="d-flex flex-wrap flex-gap-row-small flex-gap-column">
+                <ColoredChip v-for="tag in torrent.tags" default-color="tag" :value="tag" />
+              </div>
+              <ColoredChip v-else :disabled="true" default-color="tag" :value="$t('navbar.side.filters.untagged')" />
             </v-col>
           </v-row>
 
@@ -222,7 +234,7 @@ onUnmounted(async () => {
             </v-col>
             <v-col cols="6">
               <div>{{ $t('torrentDetail.overview.ratio') }}:</div>
-              <div>{{ torrent.ratio }}</div>
+              <div :class="ratioColor">{{ torrent.ratio }}</div>
             </v-col>
           </v-row>
 
@@ -252,9 +264,3 @@ onUnmounted(async () => {
     </v-card-text>
   </v-card>
 </template>
-
-<style scoped>
-.chipgap {
-  gap: 4px;
-}
-</style>

@@ -7,10 +7,10 @@ import type {
   Feed,
   FeedRule,
   Log,
+  QbitTorrent,
   SearchJob,
   SearchPlugin,
   SearchStatus,
-  Torrent,
   TorrentFile,
   TorrentProperties,
   Tracker
@@ -25,14 +25,22 @@ import type IProvider from './IProvider'
 type Parameters = Record<string, any>
 
 export default class QBitProvider implements IProvider {
+  private static _instance: QBitProvider
   private axios: AxiosInstance
 
-  constructor() {
+  private constructor() {
     this.axios = axios.create({
       baseURL: 'api/v2'
     })
 
     this.axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+  }
+
+  public static getInstance() {
+    if (!this._instance) {
+      this._instance = new QBitProvider()
+    }
+    return this._instance
   }
 
   /// Misc ///
@@ -115,13 +123,6 @@ export default class QBitProvider implements IProvider {
 
   async logout(): Promise<void> {
     return this.axios.post('/auth/logout')
-  }
-
-  async getAuthenticationStatus(): Promise<boolean> {
-    return this.axios.get('/app/buildInfo').then(
-      () => true,
-      () => false
-    )
   }
 
   /// LogController ///
@@ -316,7 +317,7 @@ export default class QBitProvider implements IProvider {
     return this.axios.get('/sync/maindata', { params: { rid } }).then(res => res.data)
   }
 
-  async getTorrentPeers(hash: string, rid?: number): Promise<TorrentPeersResponse> {
+  async syncTorrentPeers(hash: string, rid?: number): Promise<TorrentPeersResponse> {
     return this.axios
       .get('/sync/torrentPeers', {
         params: { hash, rid }
@@ -324,9 +325,9 @@ export default class QBitProvider implements IProvider {
       .then(r => r.data)
   }
 
-  /// TorentsController ///
+  /// TorrentsController ///
 
-  async getTorrents(payload?: GetTorrentPayload): Promise<Torrent[]> {
+  async getTorrents(payload?: GetTorrentPayload): Promise<QbitTorrent[]> {
     return this.axios.get('/torrents/info', { params: payload }).then(r => r.data)
   }
 
@@ -383,7 +384,7 @@ export default class QBitProvider implements IProvider {
       .then(res => res.data)
   }
 
-  async addTorrents(torrents: File[], urls: string, params: AddTorrentPayload): Promise<void> {
+  async addTorrents(torrents: File[], urls: string, params?: AddTorrentPayload): Promise<void> {
     let data
     if (torrents) {
       // torrent files
@@ -401,7 +402,7 @@ export default class QBitProvider implements IProvider {
       data = formData
     } else {
       // magnet links
-      data = new URLSearchParams(params as Parameters)
+      data = new URLSearchParams((params || {}) as Parameters)
     }
     !!urls && data.set('urls', urls)
     return this.axios.post('/torrents/add', data)
@@ -555,8 +556,9 @@ export default class QBitProvider implements IProvider {
     return this.torrentAction('addTags', hashes, { tags: tags.join('|') })
   }
 
-  async removeTorrentTag(hashes: string[], tags: string[]): Promise<void> {
-    return this.torrentAction('removeTags', hashes, { tags: tags.join('|') })
+  async removeTorrentTag(hashes: string[], tags?: string[]): Promise<void> {
+    const options = tags ? { tags: tags.join(',') } : undefined
+    return this.torrentAction('removeTags', hashes, options)
   }
 
   async createTag(tags: string[]): Promise<void> {

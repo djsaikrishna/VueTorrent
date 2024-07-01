@@ -1,4 +1,8 @@
+import { formatEta, getRatioColor, getTorrentStateColor, getTorrentStateValue } from '@/helpers'
+import { useVueTorrentStore } from '@/stores'
 import { Torrent } from '@/types/vuetorrent'
+import { DurationUnitType } from 'dayjs/plugin/duration'
+import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { DashboardProperty } from './DashboardProperty'
 import { DashboardPropertyType } from './DashboardPropertyType'
@@ -11,7 +15,7 @@ type pptMetadata =
   | { type: DashboardPropertyType.CHIP; props: pptMetadataBase<string[]> & { emptyValueKey: string; color: (t: Torrent) => string; enableHashColor?: boolean } }
   | { type: DashboardPropertyType.DATA; props: pptMetadataBase<number> }
   | { type: DashboardPropertyType.DATETIME; props: pptMetadataBase<number> }
-  | { type: DashboardPropertyType.DURATION; props: pptMetadataBase<number> }
+  | { type: DashboardPropertyType.DURATION; props: pptMetadataBase<number> & { unit: DurationUnitType } }
   | { type: DashboardPropertyType.PERCENT; props: pptMetadataBase<number> & { color: (t: Torrent) => string } }
   | { type: DashboardPropertyType.RELATIVE; props: pptMetadataBase<number> }
   | { type: DashboardPropertyType.SPEED; props: pptMetadataBase<number> }
@@ -47,6 +51,18 @@ export const propsData: PropertyData = {
   [DashboardProperty.AVG_UPLOAD_SPEED]: {
     active: false,
     order: 41
+  },
+  [DashboardProperty.BASENAME_CONTENT_PATH]: {
+    active: false,
+    order: 43
+  },
+  [DashboardProperty.BASENAME_DOWNLOAD_PATH]: {
+    active: false,
+    order: 44
+  },
+  [DashboardProperty.BASENAME_SAVE_PATH]: {
+    active: false,
+    order: 45
   },
   [DashboardProperty.CATEGORY]: {
     active: true,
@@ -95,6 +111,10 @@ export const propsData: PropertyData = {
   [DashboardProperty.HASH]: {
     active: false,
     order: 25
+  },
+  [DashboardProperty.INACTIVE_SEEDING_TIME_LIMIT]: {
+    active: false,
+    order: 42
   },
   [DashboardProperty.INFOHASH_V1]: {
     active: false,
@@ -176,6 +196,10 @@ export const propsData: PropertyData = {
     active: false,
     order: 31
   },
+  [DashboardProperty.TRUNCATED_HASH]: {
+    active: false,
+    order: 46
+  },
   [DashboardProperty.UPLOAD_LIMIT]: {
     active: false,
     order: 33
@@ -213,6 +237,30 @@ export const propsMetadata: PropertyMetadata = {
   [DashboardProperty.AVG_UPLOAD_SPEED]: {
     props: { titleKey: 'torrent.properties.avg_upload_speed', value: t => t.avgUploadSpeed },
     type: DashboardPropertyType.SPEED
+  },
+  [DashboardProperty.BASENAME_CONTENT_PATH]: {
+    props: { titleKey: 'torrent.properties.basename_content_path', value: t => t.basename_content_path },
+    type: DashboardPropertyType.TEXT
+  },
+  [DashboardProperty.BASENAME_DOWNLOAD_PATH]: {
+    props: {
+      titleKey: 'torrent.properties.basename_download_path',
+      emptyValueKey: 'common.NA',
+      value: t => [t.basename_download_path],
+      color: () => 'primary',
+      enableHashColor: true
+    },
+    type: DashboardPropertyType.CHIP
+  },
+  [DashboardProperty.BASENAME_SAVE_PATH]: {
+    props: {
+      titleKey: 'torrent.properties.basename_save_path',
+      emptyValueKey: 'common.NA',
+      value: t => [t.basename_save_path],
+      color: () => 'primary',
+      enableHashColor: true
+    },
+    type: DashboardPropertyType.CHIP
   },
   [DashboardProperty.CATEGORY]: {
     props: {
@@ -253,7 +301,7 @@ export const propsMetadata: PropertyMetadata = {
     type: DashboardPropertyType.DATA
   },
   [DashboardProperty.ETA]: {
-    props: { titleKey: 'torrent.properties.eta', value: t => t.eta },
+    props: { titleKey: 'torrent.properties.eta', value: t => formatEta(t.eta) },
     type: DashboardPropertyType.TEXT
   },
   [DashboardProperty.GLOBAL_SPEED]: {
@@ -267,6 +315,10 @@ export const propsMetadata: PropertyMetadata = {
   [DashboardProperty.HASH]: {
     props: { titleKey: 'torrent.properties.hash', value: t => t.hash },
     type: DashboardPropertyType.TEXT
+  },
+  [DashboardProperty.INACTIVE_SEEDING_TIME_LIMIT]: {
+    props: { titleKey: 'torrent.properties.inactive_seeding_time_limit', unit: 'm', value: t => t.inactive_seeding_time_limit },
+    type: DashboardPropertyType.DURATION
   },
   [DashboardProperty.INFOHASH_V1]: {
     props: { titleKey: 'torrent.properties.infohash_v1', value: t => t.infohash_v1 },
@@ -289,7 +341,7 @@ export const propsMetadata: PropertyMetadata = {
     type: DashboardPropertyType.TEXT
   },
   [DashboardProperty.PROGRESS]: {
-    props: { titleKey: 'torrent.properties.progress', value: t => t.progress, color: t => `torrent-${t.state}` },
+    props: { titleKey: 'torrent.properties.progress', value: t => t.progress, color: t => getTorrentStateColor(t.state) },
     type: DashboardPropertyType.PERCENT
   },
   [DashboardProperty.RATIO]: {
@@ -297,10 +349,10 @@ export const propsMetadata: PropertyMetadata = {
       titleKey: 'torrent.properties.ratio',
       value: t => t.ratio.toString(),
       color: (v: number) => {
-        if (v < 0.5) return 'text-ratio-bad'
-        if (v < 1) return 'text-ratio-almost'
-        if (v < 5) return 'text-ratio-good'
-        return 'text-ratio-best'
+        const { enableRatioColors } = storeToRefs(useVueTorrentStore())
+
+        if (!enableRatioColors.value) return ''
+        return getRatioColor(v)
       }
     },
     type: DashboardPropertyType.TEXT
@@ -322,15 +374,15 @@ export const propsMetadata: PropertyMetadata = {
     type: DashboardPropertyType.TEXT
   },
   [DashboardProperty.SEEDING_TIME]: {
-    props: { titleKey: 'torrent.properties.seeding_time', value: t => t.seeding_time },
+    props: { titleKey: 'torrent.properties.seeding_time', unit: 's', value: t => t.seeding_time },
     type: DashboardPropertyType.DURATION
   },
   [DashboardProperty.SEEDING_TIME_LIMIT]: {
-    props: { titleKey: 'torrent.properties.seeding_time_limit', value: t => t.seeding_time_limit },
+    props: { titleKey: 'torrent.properties.seeding_time_limit', unit: 'm', value: t => t.seeding_time_limit },
     type: DashboardPropertyType.DURATION
   },
   [DashboardProperty.SEEDS]: {
-    props: { titleKey: 'torrent.properties.seeds', value: t => t.num_seeds, total: t => t.available_peers },
+    props: { titleKey: 'torrent.properties.seeds', value: t => t.num_seeds, total: t => t.available_seeds },
     type: DashboardPropertyType.AMOUNT
   },
   [DashboardProperty.SEEN_COMPLETE]: {
@@ -342,7 +394,15 @@ export const propsMetadata: PropertyMetadata = {
     type: DashboardPropertyType.DATA
   },
   [DashboardProperty.STATE]: {
-    props: { titleKey: 'torrent.properties.state', emptyValueKey: 'torrent.state.unknown', value: t => [t.stateString], color: t => `torrent-${t.state}` },
+    props: {
+      titleKey: 'torrent.properties.state',
+      emptyValueKey: 'torrent.state.unknown',
+      value: t => {
+        const i18n = useI18n()
+        return [i18n.t(`torrent.state.${getTorrentStateValue(t.state)}`)]
+      },
+      color: t => getTorrentStateColor(t.state)
+    },
     type: DashboardPropertyType.CHIP
   },
   [DashboardProperty.TAGS]: {
@@ -350,7 +410,7 @@ export const propsMetadata: PropertyMetadata = {
     type: DashboardPropertyType.CHIP
   },
   [DashboardProperty.TIME_ACTIVE]: {
-    props: { titleKey: 'torrent.properties.time_active', value: t => t.time_active },
+    props: { titleKey: 'torrent.properties.time_active', unit: 's', value: t => t.time_active },
     type: DashboardPropertyType.DURATION
   },
   [DashboardProperty.TOTAL_SIZE]: {
@@ -360,8 +420,8 @@ export const propsMetadata: PropertyMetadata = {
   [DashboardProperty.TRACKER]: {
     props: {
       titleKey: 'torrent.properties.tracker',
-      emptyValueKey: 'torrent.properties.empty_category',
-      value: t => [t.tracker_domain],
+      emptyValueKey: 'torrent.properties.empty_tracker',
+      value: t => [t.trackerDomain],
       color: () => 'tracker',
       enableHashColor: true
     },
@@ -369,6 +429,10 @@ export const propsMetadata: PropertyMetadata = {
   },
   [DashboardProperty.TRACKERS_COUNT]: {
     props: { titleKey: 'torrent.properties.trackers_count', value: t => t.trackers_count.toString() },
+    type: DashboardPropertyType.TEXT
+  },
+  [DashboardProperty.TRUNCATED_HASH]: {
+    props: { titleKey: 'torrent.properties.truncated_hash', value: t => t.truncated_hash },
     type: DashboardPropertyType.TEXT
   },
   [DashboardProperty.UPLOAD_LIMIT]: {

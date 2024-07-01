@@ -4,7 +4,8 @@ import { defaultDateFormat, TitleOptions } from '@/constants/vuetorrent'
 import { LOCALES } from '@/locales'
 import { Github } from '@/services/Github'
 import { useAppStore, useDialogStore, useHistoryStore, useVueTorrentStore } from '@/stores'
-import { computed, onBeforeMount, ref } from 'vue'
+import { DarkLegacy, DarkRedesigned, LightLegacy, LightRedesigned } from '@/themes'
+import { computed, readonly, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { toast } from 'vue3-toastify'
 
@@ -16,12 +17,22 @@ const dialogStore = useDialogStore()
 
 const github = new Github()
 
-const titleOptionsList = [
+const titleOptionsList = readonly([
   { title: t('constants.titleOptions.default'), value: TitleOptions.DEFAULT },
   { title: t('constants.titleOptions.global_speed'), value: TitleOptions.GLOBAL_SPEED },
   { title: t('constants.titleOptions.first_torrent_speed'), value: TitleOptions.FIRST_TORRENT_STATUS },
   { title: t('constants.titleOptions.custom'), value: TitleOptions.CUSTOM }
-]
+])
+
+const lightVariants = readonly([
+  { title: t('constants.themes.light.legacy'), value: LightLegacy.id },
+  { title: t('constants.themes.light.redesigned'), value: LightRedesigned.id }
+])
+
+const darkVariants = readonly([
+  { title: t('constants.themes.dark.legacy'), value: DarkLegacy.id },
+  { title: t('constants.themes.dark.redesigned'), value: DarkRedesigned.id }
+])
 
 const paginationSizes = ref([{ title: t('settings.vuetorrent.general.paginationSize.infinite_scroll'), value: -1 }, 5, 15, 30, 50, 100, 250, 500])
 
@@ -55,15 +66,17 @@ const paginationSize = computed({
 const paginationSizeMessages = computed(() => (vueTorrentStore.paginationSize > 1000 ? t('settings.vuetorrent.general.paginationSize.warning') : ''))
 
 const resetSettings = () => {
-  window.localStorage.clear()
-  window.sessionStorage.clear()
+  localStorage.clear()
+  sessionStorage.clear()
   location.reload()
 }
 
 const downloadSettings = () => {
-  const settings = window.localStorage.getItem('vuetorrent_webuiSettings')
+  const settings = localStorage.getItem('vuetorrent_webuiSettings')
   if (!settings) return
-  const blob = new Blob([settings], { type: 'application/json' })
+
+  const jsonString = JSON.stringify(JSON.parse(settings), null, 2)
+  const blob = new Blob([jsonString], { type: 'application/json' })
   const blobUrl = URL.createObjectURL(blob)
 
   const a = document.createElement('a')
@@ -94,14 +107,17 @@ const checkNewVersion = async () => {
   if (vueTorrentVersion.value === 'DEV') return
 
   const latest = await github.getVersion()
-  if (`v${vueTorrentVersion.value}` === latest) return
+  if (`v${vueTorrentVersion.value}` === latest) {
+    toast.success(t('toast.version.latest'))
+    return
+  }
 
-  toast.info(t('toast.new_version'))
+  toast.info(t('toast.version.new'))
 }
 
-onBeforeMount(() => {
-  appStore.fetchQbitVersion()
-})
+function openBackendHelp() {
+  window.open('https://github.com/VueTorrent/vuetorrent-backend/wiki/Installation', '_blank', 'noreferrer')
+}
 </script>
 
 <template>
@@ -128,21 +144,21 @@ onBeforeMount(() => {
           <v-checkbox v-model="vueTorrentStore.showFreeSpace" hide-details density="compact" :label="t('settings.vuetorrent.general.showFreeSpace')" />
         </v-col>
         <v-col cols="12" sm="6">
-          <v-checkbox v-model="vueTorrentStore.showTrackerFilter" hide-details density="compact" :label="t('settings.vuetorrent.general.showTrackerFilter')" />
+          <v-checkbox v-model="vueTorrentStore.isDrawerRight" hide-details density="compact" :label="t('settings.vuetorrent.general.isDrawerRight')" />
         </v-col>
 
         <v-col cols="12" sm="6">
-          <v-checkbox v-model="vueTorrentStore.isDrawerRight" hide-details density="compact" :label="t('settings.vuetorrent.general.isDrawerRight')" />
+          <v-checkbox v-model="vueTorrentStore.enableRatioColors" hide-details density="compact" :label="t('settings.vuetorrent.general.enableRatioColors')" />
         </v-col>
         <v-col cols="12" sm="6">
-          <v-checkbox v-model="vueTorrentStore.isPaginationOnTop" hide-details density="compact" :label="t('settings.vuetorrent.general.isPaginationOnTop')" />
+          <v-checkbox v-model="vueTorrentStore.enableHashColors" hide-details density="compact" :label="t('settings.vuetorrent.general.enableHashColors')" />
         </v-col>
 
         <v-col cols="12" sm="6">
           <v-checkbox v-model="vueTorrentStore.hideChipIfUnset" hide-details density="compact" :label="t('settings.vuetorrent.general.hideChipIfUnset')" />
         </v-col>
         <v-col cols="12" sm="6">
-          <v-checkbox v-model="vueTorrentStore.enableHashColors" hide-details density="compact" :label="t('settings.vuetorrent.general.enableHashColors')" />
+          <v-checkbox v-model="vueTorrentStore.hideColoredChip" hide-details density="compact" :label="t('settings.vuetorrent.general.hideColoredChip')" />
         </v-col>
 
         <v-col cols="12" sm="6">
@@ -161,7 +177,7 @@ onBeforeMount(() => {
       </v-row>
     </v-list-item>
 
-    <v-list-item>
+    <v-list-item class="mt-3">
       <v-row>
         <v-col cols="12" md="4">
           <v-text-field v-model.number="vueTorrentStore.refreshInterval" type="number" hide-details suffix="ms" :label="t('settings.vuetorrent.general.refreshInterval')" />
@@ -172,9 +188,7 @@ onBeforeMount(() => {
         <v-col cols="12" md="4">
           <v-text-field v-model.number="historyStore.historySize" type="number" hide-details :label="t('settings.vuetorrent.general.historySize')" />
         </v-col>
-      </v-row>
 
-      <v-row>
         <v-col cols="12" md="6">
           <v-select v-model="vueTorrentStore.language" flat hide-details :items="LOCALES" :label="t('settings.vuetorrent.general.language')" />
         </v-col>
@@ -183,13 +197,12 @@ onBeforeMount(() => {
             v-model="paginationSize"
             :messages="paginationSizeMessages"
             flat
+            hide-details
             :items="paginationSizes"
             :return-object="false"
             :label="t('settings.vuetorrent.general.paginationSize.label')" />
         </v-col>
-      </v-row>
 
-      <v-row>
         <v-col cols="12" md="4">
           <v-select v-model="vueTorrentStore.uiTitleType" flat hide-details :items="titleOptionsList" :label="t('settings.vuetorrent.general.vueTorrentTitle')" />
         </v-col>
@@ -200,11 +213,27 @@ onBeforeMount(() => {
             hide-details
             :label="t('settings.vuetorrent.general.customTitle')" />
         </v-col>
+
+        <v-col cols="12" md="6">
+          <v-select v-model="vueTorrentStore.theme.light" flat hide-details :items="lightVariants" :label="$t('settings.vuetorrent.general.lightVariants')" />
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-select v-model="vueTorrentStore.theme.dark" flat hide-details :items="darkVariants" :label="$t('settings.vuetorrent.general.darkVariants')" />
+        </v-col>
       </v-row>
 
       <v-row>
         <v-col cols="12" md="6">
           <v-text-field v-model="vueTorrentStore.dateFormat" :placeholder="defaultDateFormat" hint="using Dayjs" :label="t('settings.vuetorrent.general.dateFormat')" />
+        </v-col>
+
+        <v-col cols="12" md="6">
+          <v-text-field
+            v-model="vueTorrentStore.backendUrl"
+            :label="t('settings.vuetorrent.general.backendUrl')"
+            placeholder="https://YOUR-HOST:PORT/"
+            append-inner-icon="mdi-help-circle"
+            @click:appendInner="openBackendHelp" />
         </v-col>
       </v-row>
     </v-list-item>

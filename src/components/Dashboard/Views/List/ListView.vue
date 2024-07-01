@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import ListTorrent from '@/components/Dashboard/Views/List/ListTorrent.vue'
+import { getTorrentStateColor } from '@/helpers'
 import { useDashboardStore } from '@/stores/dashboard'
 import { Torrent as TorrentType } from '@/types/vuetorrent'
 import { useDisplay } from 'vuetify'
@@ -37,8 +38,8 @@ const dashboardStore = useDashboardStore()
       <div class="d-flex align-center">
         <v-expand-x-transition>
           <v-btn
-            v-show="dashboardStore.isSelectionMultiple"
-            :color="`torrent-${torrent.state}`"
+            v-if="dashboardStore.isSelectionMultiple"
+            :color="getTorrentStateColor(torrent.state)"
             :icon="dashboardStore.isTorrentInSelection(torrent.hash) ? 'mdi-checkbox-marked' : 'mdi-checkbox-blank-outline'"
             class="mr-2"
             variant="text"

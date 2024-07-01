@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import AppPreferences from '@/types/qbit/models/AppPreferences'
-import { qbit } from '@/services'
+import qbit from '@/services/qbit'
 
 export const usePreferenceStore = defineStore(
   'preferences',
@@ -26,14 +26,9 @@ export const usePreferenceStore = defineStore(
     }
   },
   {
-    persist: {
+    persistence: {
       enabled: true,
-      strategies: [
-        {
-          storage: sessionStorage,
-          key: 'vuetorrent_preferences'
-        }
-      ]
+      storageItems: [{ storage: sessionStorage }]
     }
   }
 )

@@ -1,4 +1,4 @@
-import { qbit } from '@/services'
+import qbit from '@/services/qbit'
 import { SearchPlugin } from '@/types/qbit/models'
 import { SearchData } from '@/types/vuetorrent'
 import { defineStore } from 'pinia'
@@ -90,14 +90,9 @@ export const useSearchEngineStore = defineStore(
     }
   },
   {
-    persist: {
+    persistence: {
       enabled: true,
-      strategies: [
-        {
-          storage: sessionStorage,
-          key: 'vuetorrent_searchEngine'
-        }
-      ]
+      storageItems: [{ storage: sessionStorage }]
     }
   }
 )

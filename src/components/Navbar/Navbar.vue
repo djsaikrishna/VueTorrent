@@ -26,7 +26,7 @@ const goHome = () => {
 </script>
 
 <template>
-  <v-navigation-drawer class="ios-padding" v-model="isDrawerOpen" :location="isDrawerRight ? 'right' : 'left'" color="primary" disable-route-watcher>
+  <v-navigation-drawer class="ios-padding" v-model="isDrawerOpen" :location="isDrawerRight ? 'right' : 'left'" color="navbar" disable-route-watcher>
     <v-list class="clean-px px-2 pt-0">
       <v-list-item v-if="showCurrentSpeed">
         <CurrentSpeed />
@@ -66,7 +66,7 @@ const goHome = () => {
   <v-app-bar class="ios-padding">
     <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-app-bar-title class="title">
-      <div class="title-wrapper pointer" @click="goHome">
+      <div class="title-wrapper cursor-pointer" @click="goHome">
         <span v-if="$vuetify.display.smAndUp" class="text-accent">Vue</span>
         <span v-if="$vuetify.display.smAndUp">Torrent</span>
       </div>

@@ -1,29 +1,175 @@
 # Changelog
 
-## [2.7.3](https://github.com/VueTorrent/VueTorrent/compare/v2.7.2...v2.7.3) (2024-04-02)
-
+## [2.10.2](https://github.com/VueTorrent/VueTorrent/compare/v2.10.1...v2.10.2) (2024-06-28)
 
 ### Bug Fixes
 
-* **AddTorrentDialog:** Unset download path if default is unchecked ([#1619](https://github.com/VueTorrent/VueTorrent/issues/1619)) ([b6db317](https://github.com/VueTorrent/VueTorrent/commit/b6db3175997bb14d2c8f407e50cce8115d79ce01))
-* announced IP not parsed correctly ([#1601](https://github.com/VueTorrent/VueTorrent/issues/1601)) ([c76caef](https://github.com/VueTorrent/VueTorrent/commit/c76caef77d997ab91f878f49efb05b8241d7e41e))
-* **RSS Rules:** Download limits not sent correctly to qbit ([#1622](https://github.com/VueTorrent/VueTorrent/issues/1622)) ([a8dbea8](https://github.com/VueTorrent/VueTorrent/commit/a8dbea8652af7db8bbd0c6aff3cb6d2c77731ce7))
-* **RSS Rules:** Fix last match not displaying ([#1618](https://github.com/VueTorrent/VueTorrent/issues/1618)) ([a4ca1c9](https://github.com/VueTorrent/VueTorrent/commit/a4ca1c90c5752ee1338a0f94c3b8b7e25ccc7944))
-* **RSS Rules:** Include deprecated fields for better retro-compatibility ([#1621](https://github.com/VueTorrent/VueTorrent/issues/1621)) ([cca5a36](https://github.com/VueTorrent/VueTorrent/commit/cca5a364eff5e3754549069554dbba4cd17b2014))
-* **ServiceWorker:** sw.js url ([#1609](https://github.com/VueTorrent/VueTorrent/issues/1609)) ([702ff80](https://github.com/VueTorrent/VueTorrent/commit/702ff80ae364599d1b252da363e14d5232ccb9f3))
-* **TorrentDetail:** Differentiate fullName for the root node([#1616](https://github.com/VueTorrent/VueTorrent/issues/1616)) ([#1617](https://github.com/VueTorrent/VueTorrent/issues/1617)) ([4ce5eca](https://github.com/VueTorrent/VueTorrent/commit/4ce5eca6172fddb25211d82520958b19dabcb995))
+- **CI:** Add missing output ([#1759](https://github.com/VueTorrent/VueTorrent/issues/1759))
+  ([acbf51b](https://github.com/VueTorrent/VueTorrent/commit/acbf51b48c9548b1093ffbd6dba09e95847a7c03))
 
+## [2.10.1](https://github.com/VueTorrent/VueTorrent/compare/v2.10.0...v2.10.1) (2024-06-28)
+
+### Bug Fixes
+
+- **CI:** Fix LSIO mod build ([#1757](https://github.com/VueTorrent/VueTorrent/issues/1757))
+  ([766957c](https://github.com/VueTorrent/VueTorrent/commit/766957ce2f50b56631a499c169baf703226f4ced))
+
+## [2.10.0](https://github.com/VueTorrent/VueTorrent/compare/v2.9.0...v2.10.0) (2024-06-28)
+
+### Features
+
+- **addons:** Add qbit Enhanced edition support ([#1718](https://github.com/VueTorrent/VueTorrent/issues/1718))
+  ([d273ab8](https://github.com/VueTorrent/VueTorrent/commit/d273ab810fe52df882065b66ff51b1e7a0f0ff05))
+- **Dashboard:** Add truncated hash and basename paths properties ([#1747](https://github.com/VueTorrent/VueTorrent/issues/1747))
+  ([69f949a](https://github.com/VueTorrent/VueTorrent/commit/69f949a7ad400843eee406e4e0a61436b8fabd2a))
+- **dashboard:** Use local sort system on all properties ([#1740](https://github.com/VueTorrent/VueTorrent/issues/1740))
+  ([63dd06f](https://github.com/VueTorrent/VueTorrent/commit/63dd06fab1ea0190a9984e0984b1ab4d14e0e72c))
+- **docker:** Build official LSIO mod docker image ([#1756](https://github.com/VueTorrent/VueTorrent/issues/1756))
+  ([f4d460b](https://github.com/VueTorrent/VueTorrent/commit/f4d460b3dcecead4273242264c0fa09c6c7478fb))
+- **Drag-and-Drop:** Add instant download zone ([#1750](https://github.com/VueTorrent/VueTorrent/issues/1750))
+  ([feec23d](https://github.com/VueTorrent/VueTorrent/commit/feec23d93289a7034e240d7fe6016a523a199734))
+
+### Bug Fixes
+
+- **chips:** Use text instead of invisible pill ([#1712](https://github.com/VueTorrent/VueTorrent/issues/1712))
+  ([c2beb03](https://github.com/VueTorrent/VueTorrent/commit/c2beb03c2a2566d38161e43f4a3ee2919bd40cbd))
+- **colors:** Rework torrent state colors for better readability ([#1738](https://github.com/VueTorrent/VueTorrent/issues/1738))
+  ([550570b](https://github.com/VueTorrent/VueTorrent/commit/550570b1aa0be43f6bc0f12a71317e0be64c14dd))
+- **content:** Improve Windows path support ([#1714](https://github.com/VueTorrent/VueTorrent/issues/1714))
+  ([27f37a4](https://github.com/VueTorrent/VueTorrent/commit/27f37a4fadb14787a94af87fcf2e664858036c1f))
+- **content:** Prevent app from freezing when exiting too quickly ([38a33c4](https://github.com/VueTorrent/VueTorrent/commit/38a33c41c0117ebb62f391e2336f6f41960aa07a))
+- **Dashboard:** Fix span selection after [#1740](https://github.com/VueTorrent/VueTorrent/issues/1740) ([#1746](https://github.com/VueTorrent/VueTorrent/issues/1746))
+  ([24e8313](https://github.com/VueTorrent/VueTorrent/commit/24e831359bea8bac5f9105d11b5e9c6568885aba))
+- **dashboard:** Prevent "Delete" action when search input is focused ([#1729](https://github.com/VueTorrent/VueTorrent/issues/1729))
+  ([7589ebe](https://github.com/VueTorrent/VueTorrent/commit/7589ebe4abc6e0bc1ba2b6193ce91ea7fa785cb4))
+- Do not wrap items to 2 or more lines in table view closes [#1538](https://github.com/VueTorrent/VueTorrent/issues/1538)
+  ([#1716](https://github.com/VueTorrent/VueTorrent/issues/1716)) ([fa86db5](https://github.com/VueTorrent/VueTorrent/commit/fa86db59d5a5d7a4bd5f7416f4518fb8a8bd58eb))
+- **peers:** Update 100% peer color after [#1740](https://github.com/VueTorrent/VueTorrent/issues/1740) ([#1753](https://github.com/VueTorrent/VueTorrent/issues/1753))
+  ([0c1a65f](https://github.com/VueTorrent/VueTorrent/commit/0c1a65fc6c6522dd5c2f45d8ed7c3651833fb6dd))
+- **pieceCanvas:** Fix color names after [#1740](https://github.com/VueTorrent/VueTorrent/issues/1740) ([#1745](https://github.com/VueTorrent/VueTorrent/issues/1745))
+  ([60beb8a](https://github.com/VueTorrent/VueTorrent/commit/60beb8a387254cad36d3548f993c51bd11107e48))
+
+## [2.9.0](https://github.com/VueTorrent/VueTorrent/compare/v2.8.1...v2.9.0) (2024-06-01)
+
+### Features
+
+- Add theme variants ([#1641](https://github.com/VueTorrent/VueTorrent/issues/1641))
+  ([6a20007](https://github.com/VueTorrent/VueTorrent/commit/6a20007290b3f1846583dc6fd3330bc0b8a7a6e0))
+- **pages:** Deploy mocked demo version ([#1690](https://github.com/VueTorrent/VueTorrent/issues/1690))
+  ([f8695bf](https://github.com/VueTorrent/VueTorrent/commit/f8695bf9a6d16f8f073381c6ab0750b770c0de1c))
+- **tags:** added remove all button for tags in rightClick menu ([#1701](https://github.com/VueTorrent/VueTorrent/issues/1701))
+  ([2a4aedc](https://github.com/VueTorrent/VueTorrent/commit/2a4aedc86dacbb53e64031cb56cbb6fd4dc86a89))
+- **tags:** option to have tags/categories without the “pill” shape ([#1492](https://github.com/VueTorrent/VueTorrent/issues/1492))
+  ([#1708](https://github.com/VueTorrent/VueTorrent/issues/1708)) ([c3fc963](https://github.com/VueTorrent/VueTorrent/commit/c3fc9634652468a2f4edd537505b263754ca9d7d))
+
+### Bug Fixes
+
+- **content:** files not rendering under certain conditions ([#1696](https://github.com/VueTorrent/VueTorrent/issues/1696))
+  ([b85e403](https://github.com/VueTorrent/VueTorrent/commit/b85e403829e5ca8b99703a09da7be3b4b4c5123d))
+- **content:** Selected files stays at 0/0 ([#1702](https://github.com/VueTorrent/VueTorrent/issues/1702))
+  ([ac9031d](https://github.com/VueTorrent/VueTorrent/commit/ac9031d2ad0a031822a90cc8c06a0005c478ce68))
+- **filters:** "Untagged" value not using tracker filter when matched ([#1695](https://github.com/VueTorrent/VueTorrent/issues/1695))
+  ([251472e](https://github.com/VueTorrent/VueTorrent/commit/251472e921d77da6665dffca0bf98ed8f877a709))
 
 ### Improvements
 
-* add title navigation ([#1590](https://github.com/VueTorrent/VueTorrent/issues/1590)) ([13afd79](https://github.com/VueTorrent/VueTorrent/commit/13afd7920e453f8ebd211bdf8acb60b67eb5470e))
-* **chip colors:** Add feature toggle ([#1600](https://github.com/VueTorrent/VueTorrent/issues/1600)) ([d311a69](https://github.com/VueTorrent/VueTorrent/commit/d311a69bdc4f9c1e4ee5bb19cb73c4dc303cbcf7))
-* fetch Geolocation & ISP details ([#1602](https://github.com/VueTorrent/VueTorrent/issues/1602)) ([902b044](https://github.com/VueTorrent/VueTorrent/commit/902b0442595afb016791c2d685d30af121c1e65c))
-* Replace ratio_time_limit by seeding_time_limit ([#1611](https://github.com/VueTorrent/VueTorrent/issues/1611)) ([6edde21](https://github.com/VueTorrent/VueTorrent/commit/6edde21976c512ce75c2b2666e9b9d2d2cc382b8))
-* special values for ratio limit ([#1613](https://github.com/VueTorrent/VueTorrent/issues/1613)) ([2e379cf](https://github.com/VueTorrent/VueTorrent/commit/2e379cf242e5d1c0c4e229d3638cd9bea9e7b873))
-* **torrentCard:** Add select all / none buttons ([#1604](https://github.com/VueTorrent/VueTorrent/issues/1604)) ([492c0dd](https://github.com/VueTorrent/VueTorrent/commit/492c0ddad72425511bddd00a3306cde097a1641e))
-* **TorrentCard:** decrease chip size ([#1608](https://github.com/VueTorrent/VueTorrent/issues/1608)) ([08a49f0](https://github.com/VueTorrent/VueTorrent/commit/08a49f04b607b9185a90f1df653ad374c283fe37))
-* **TorrentCard:** decrease chip size for table view ([#1610](https://github.com/VueTorrent/VueTorrent/issues/1610)) ([3413ef0](https://github.com/VueTorrent/VueTorrent/commit/3413ef0e241bada21713795f35dd55d2a1b9d7de))
+- **content:** Improve performance ([#1697](https://github.com/VueTorrent/VueTorrent/issues/1697))
+  ([58341c6](https://github.com/VueTorrent/VueTorrent/commit/58341c63b7b405e5a38976c2871d98fc9a1ab267))
+- **Peers:** Bring back sorting and filtering ([#1694](https://github.com/VueTorrent/VueTorrent/issues/1694))
+  ([d6ed8dd](https://github.com/VueTorrent/VueTorrent/commit/d6ed8dd51a9d1760098a08849fa2ba573f26d10e))
+- **RSS:** Rework RSS views ([#1685](https://github.com/VueTorrent/VueTorrent/issues/1685))
+  ([baed303](https://github.com/VueTorrent/VueTorrent/commit/baed3032a21e9ac7ff3b80f5f0afc893d173b7d3))
+
+## [2.8.1](https://github.com/VueTorrent/VueTorrent/compare/v2.8.0...v2.8.1) (2024-05-14)
+
+### Bug Fixes
+
+- **backend:** Exclude custom title from backend sync ([#1673](https://github.com/VueTorrent/VueTorrent/issues/1673))
+  ([e9f78d4](https://github.com/VueTorrent/VueTorrent/commit/e9f78d4ebd96e4e4c38cf63e63e5a707b2792972))
+
+### Improvements
+
+- **MagnetHandler:** Add alias to old link for better compatibility ([#1682](https://github.com/VueTorrent/VueTorrent/issues/1682))
+  ([3b1f5a3](https://github.com/VueTorrent/VueTorrent/commit/3b1f5a3cd909c54787a67e11cafb0c00f51b56db))
+- **Peers:** Show client, peer_id, and i18n strings ([#1579](https://github.com/VueTorrent/VueTorrent/issues/1579))
+  ([cbfe2c9](https://github.com/VueTorrent/VueTorrent/commit/cbfe2c92a71ebe626584e50f46e7868c9bf6f655))
+- Reword torrent priority to queue position ([#1667](https://github.com/VueTorrent/VueTorrent/issues/1667))
+  ([719a29d](https://github.com/VueTorrent/VueTorrent/commit/719a29d778040fa73228cbf3937a23ab08c7ae9d))
+- **RSS:** add refresh all rss feeds button to rss articles ([#1679](https://github.com/VueTorrent/VueTorrent/issues/1679))
+  ([4ddf5f3](https://github.com/VueTorrent/VueTorrent/commit/4ddf5f3469861f9dbc396ea18d9e9ae0de37a449))
+- **settings:** Prettify exported JSON ([#1672](https://github.com/VueTorrent/VueTorrent/issues/1672))
+  ([84b9c12](https://github.com/VueTorrent/VueTorrent/commit/84b9c12881ef81cac360e98af600fae9c69b255a))
+- **TorrentDetail:** Use colors for ratio and chips ([#1662](https://github.com/VueTorrent/VueTorrent/issues/1662))
+  ([c902d62](https://github.com/VueTorrent/VueTorrent/commit/c902d622b9684112108aab038db75d13ae474976))
+
+## [2.8.0](https://github.com/VueTorrent/VueTorrent/compare/v2.7.3...v2.8.0) (2024-04-23)
+
+### Features
+
+- Add optional backend handling ([#1547](https://github.com/VueTorrent/VueTorrent/issues/1547))
+  ([d513e09](https://github.com/VueTorrent/VueTorrent/commit/d513e097bf325088b434fbf9529dab4609a7ede7))
+- **TorrentDetail:** add bulk renaming ([#1624](https://github.com/VueTorrent/VueTorrent/issues/1624))
+  ([a7ebcb5](https://github.com/VueTorrent/VueTorrent/commit/a7ebcb59d95e03029f68ecee3632fdbe73eafa79))
+
+### Bug Fixes
+
+- Add missing forcedMetaDL state ([#1652](https://github.com/VueTorrent/VueTorrent/issues/1652))
+  ([1013151](https://github.com/VueTorrent/VueTorrent/commit/1013151e718bde6bb41365bc249e01ba9a422e95))
+- **AddTorrentParams:** Convert seeding time to minutes manually ([#1649](https://github.com/VueTorrent/VueTorrent/issues/1649))
+  ([3d05859](https://github.com/VueTorrent/VueTorrent/commit/3d0585928da85e5d97c2e2d8f804afde477f372e))
+- **MagnetHandler:** Don't show add dialog if not authenticated ([#1657](https://github.com/VueTorrent/VueTorrent/issues/1657))
+  ([a0cdffd](https://github.com/VueTorrent/VueTorrent/commit/a0cdffd380634ef0c866657201b7af98e5f78f2c))
+- seeds and peers shows same value ([#1632](https://github.com/VueTorrent/VueTorrent/issues/1632))
+  ([bd09a8a](https://github.com/VueTorrent/VueTorrent/commit/bd09a8a4250ac6f1a0999c985f5afc3aee300eb8))
+- **share limits:** Revert and fix display ([#1654](https://github.com/VueTorrent/VueTorrent/issues/1654))
+  ([2eca39e](https://github.com/VueTorrent/VueTorrent/commit/2eca39e899956280a682c1c53a6d145020435599))
+- **WebUI:** Bypass auth subnet whitelist not working ([#1645](https://github.com/VueTorrent/VueTorrent/issues/1645))
+  ([4cbb456](https://github.com/VueTorrent/VueTorrent/commit/4cbb45679c0e4f39314c51937ebaa2593a86e994))
+
+### Improvements
+
+- **Content:** Better handle tree filtering ([#1631](https://github.com/VueTorrent/VueTorrent/issues/1631))
+  ([f4e73aa](https://github.com/VueTorrent/VueTorrent/commit/f4e73aa7fcda207ef38873db4452fd84d931f0f3))
+- **ratio colors:** Add feature toggle ([#1633](https://github.com/VueTorrent/VueTorrent/issues/1633))
+  ([6874944](https://github.com/VueTorrent/VueTorrent/commit/68749446f6cb772b1d04970172b2c2bd160b13f3))
+
+## [2.7.3](https://github.com/VueTorrent/VueTorrent/compare/v2.7.2...v2.7.3) (2024-04-02)
+
+### Bug Fixes
+
+- **AddTorrentDialog:** Unset download path if default is unchecked ([#1619](https://github.com/VueTorrent/VueTorrent/issues/1619))
+  ([b6db317](https://github.com/VueTorrent/VueTorrent/commit/b6db3175997bb14d2c8f407e50cce8115d79ce01))
+- announced IP not parsed correctly ([#1601](https://github.com/VueTorrent/VueTorrent/issues/1601))
+  ([c76caef](https://github.com/VueTorrent/VueTorrent/commit/c76caef77d997ab91f878f49efb05b8241d7e41e))
+- **RSS Rules:** Download limits not sent correctly to qbit ([#1622](https://github.com/VueTorrent/VueTorrent/issues/1622))
+  ([a8dbea8](https://github.com/VueTorrent/VueTorrent/commit/a8dbea8652af7db8bbd0c6aff3cb6d2c77731ce7))
+- **RSS Rules:** Fix last match not displaying ([#1618](https://github.com/VueTorrent/VueTorrent/issues/1618))
+  ([a4ca1c9](https://github.com/VueTorrent/VueTorrent/commit/a4ca1c90c5752ee1338a0f94c3b8b7e25ccc7944))
+- **RSS Rules:** Include deprecated fields for better retro-compatibility ([#1621](https://github.com/VueTorrent/VueTorrent/issues/1621))
+  ([cca5a36](https://github.com/VueTorrent/VueTorrent/commit/cca5a364eff5e3754549069554dbba4cd17b2014))
+- **ServiceWorker:** sw.js url ([#1609](https://github.com/VueTorrent/VueTorrent/issues/1609))
+  ([702ff80](https://github.com/VueTorrent/VueTorrent/commit/702ff80ae364599d1b252da363e14d5232ccb9f3))
+- **TorrentDetail:** Differentiate fullName for the root node([#1616](https://github.com/VueTorrent/VueTorrent/issues/1616))
+  ([#1617](https://github.com/VueTorrent/VueTorrent/issues/1617)) ([4ce5eca](https://github.com/VueTorrent/VueTorrent/commit/4ce5eca6172fddb25211d82520958b19dabcb995))
+
+### Improvements
+
+- add title navigation ([#1590](https://github.com/VueTorrent/VueTorrent/issues/1590))
+  ([13afd79](https://github.com/VueTorrent/VueTorrent/commit/13afd7920e453f8ebd211bdf8acb60b67eb5470e))
+- **chip colors:** Add feature toggle ([#1600](https://github.com/VueTorrent/VueTorrent/issues/1600))
+  ([d311a69](https://github.com/VueTorrent/VueTorrent/commit/d311a69bdc4f9c1e4ee5bb19cb73c4dc303cbcf7))
+- fetch Geolocation & ISP details ([#1602](https://github.com/VueTorrent/VueTorrent/issues/1602))
+  ([902b044](https://github.com/VueTorrent/VueTorrent/commit/902b0442595afb016791c2d685d30af121c1e65c))
+- Replace ratio_time_limit by seeding_time_limit ([#1611](https://github.com/VueTorrent/VueTorrent/issues/1611))
+  ([6edde21](https://github.com/VueTorrent/VueTorrent/commit/6edde21976c512ce75c2b2666e9b9d2d2cc382b8))
+- special values for ratio limit ([#1613](https://github.com/VueTorrent/VueTorrent/issues/1613))
+  ([2e379cf](https://github.com/VueTorrent/VueTorrent/commit/2e379cf242e5d1c0c4e229d3638cd9bea9e7b873))
+- **torrentCard:** Add select all / none buttons ([#1604](https://github.com/VueTorrent/VueTorrent/issues/1604))
+  ([492c0dd](https://github.com/VueTorrent/VueTorrent/commit/492c0ddad72425511bddd00a3306cde097a1641e))
+- **TorrentCard:** decrease chip size ([#1608](https://github.com/VueTorrent/VueTorrent/issues/1608))
+  ([08a49f0](https://github.com/VueTorrent/VueTorrent/commit/08a49f04b607b9185a90f1df653ad374c283fe37))
+- **TorrentCard:** decrease chip size for table view ([#1610](https://github.com/VueTorrent/VueTorrent/issues/1610))
+  ([3413ef0](https://github.com/VueTorrent/VueTorrent/commit/3413ef0e241bada21713795f35dd55d2a1b9d7de))
 
 ## [2.7.2](https://github.com/VueTorrent/VueTorrent/compare/v2.7.1...v2.7.2) (2024-03-19)
 

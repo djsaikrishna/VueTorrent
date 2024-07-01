@@ -7,10 +7,11 @@ import type {
   Feed,
   FeedRule,
   Log,
+  QbitTorrent,
+  RawQbitTorrent,
   SearchJob,
   SearchPlugin,
   SearchStatus,
-  Torrent,
   TorrentFile,
   TorrentProperties,
   Tracker
@@ -24,7 +25,24 @@ import IProvider from './IProvider'
 
 export default class MockProvider implements IProvider {
   private static instance: MockProvider
-  private static hashes: string[] = Array(parseInt(import.meta.env.VITE_FAKE_TORRENTS_COUNT))
+  private readonly categories: Record<string, Category> = {
+    ISO: { name: 'ISO', savePath: faker.system.directoryPath() },
+    Other: { name: 'Other', savePath: faker.system.directoryPath() },
+    Movie: { name: 'Movie', savePath: faker.system.directoryPath() },
+    Music: { name: 'Music', savePath: faker.system.directoryPath() },
+    TV: { name: 'TV', savePath: faker.system.directoryPath() }
+  }
+  private readonly tags: string[] = ['sorted', 'pending_sort']
+  private readonly trackers: Record<string, string[]> = faker.helpers
+    .multiple(() => faker.internet.url(), { count: 5 })
+    .reduce(
+      (obj, url) => {
+        obj[url] = faker.helpers.arrayElements(MockProvider.hashes)
+        return obj
+      },
+      {} as Record<string, string[]>
+    )
+  private static hashes: string[] = Array(parseInt(import.meta.env.VITE_FAKE_TORRENTS_COUNT || 15))
     .fill('')
     .map((_, i) => (i + 1).toString(16).padStart(40, '0'))
 
@@ -37,9 +55,78 @@ export default class MockProvider implements IProvider {
     return MockProvider.instance
   }
 
-  private async generateResponse<T>(options?: { result?: T; shouldResolve?: boolean }): Promise<T> {
+  private generateMockedTorrent(hash: string): RawQbitTorrent {
+    const added_on = faker.date.past()
+    const last_activity = faker.date.between({ from: added_on, to: Date.now() })
+    const name = faker.system.fileName()
+    const num_complete = faker.number.int({ min: 0, max: 250 })
+    const num_incomplete = faker.number.int({ min: 0, max: 250 })
+    const total_size = faker.number.int({ min: 1_000_000, max: 1_000_000_000_000 }) // [1 Mo; 1 To]
+    const completed = faker.number.int({ min: 0, max: total_size })
+    const tracker = faker.helpers.arrayElement(Object.keys(this.trackers))
+
+    return {
+      added_on: added_on.getTime() / 1000,
+      amount_left: faker.number.int({ min: 0, max: total_size }),
+      auto_tmm: faker.datatype.boolean(),
+      availability: faker.number.float({ min: 0, max: 100, multipleOf: 0.01 }),
+      category: faker.helpers.arrayElement(['', ...Object.keys(this.categories)]),
+      completed,
+      completion_on: faker.date.between({ from: added_on, to: Date.now() }).getTime() / 1000,
+      content_path: faker.system.filePath(),
+      dl_limit: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+      dlspeed: faker.number.int({ min: 0, max: 5_000_000 }), // [0; 5 Mo/s]
+      download_path: faker.system.directoryPath(),
+      downloaded: completed,
+      downloaded_session: completed,
+      eta: faker.number.int({ min: 0, max: 900000 }),
+      f_l_piece_prio: faker.datatype.boolean(),
+      force_start: faker.datatype.boolean(),
+      inactive_seeding_time_limit: -2,
+      infohash_v1: hash,
+      infohash_v2: '',
+      last_activity: last_activity.getTime() / 1000,
+      magnet_uri: `magnet:?xt=urn:btih:${hash}&dn=${name}&tr=${tracker}`,
+      max_inactive_seeding_time: -1,
+      max_ratio: -1,
+      max_seeding_time: -1,
+      name,
+      num_complete,
+      num_incomplete,
+      num_leechs: faker.number.int({ min: 0, max: num_incomplete }),
+      num_seeds: faker.number.int({ min: 0, max: num_complete }),
+      priority: 1,
+      progress: completed / total_size,
+      ratio: 0,
+      ratio_limit: -2,
+      save_path: faker.system.directoryPath(),
+      seeding_time: 0,
+      seeding_time_limit: -2,
+      seen_complete: faker.date.between({ from: added_on, to: last_activity }).getTime() / 1000,
+      seq_dl: faker.datatype.boolean(),
+      size: total_size,
+      state: faker.helpers.enumValue(TorrentState),
+      super_seeding: faker.datatype.boolean(),
+      tags: faker.helpers.arrayElements(this.tags, { min: 0, max: this.tags.length }).join(', '),
+      time_active: 0,
+      total_size,
+      tracker,
+      trackers_count: 1,
+      up_limit: 0,
+      uploaded: 0,
+      uploaded_session: 0,
+      upspeed: 0
+    }
+  }
+
+  private async generateResponse<T>(options?: { result?: T; shouldResolve?: boolean; delay?: number }): Promise<T> {
     const result = options?.result === undefined ? undefined : options.result
     const shouldResolve = options?.shouldResolve === undefined ? true : options.shouldResolve
+    const delay = options?.delay === undefined ? 0 : options.delay
+
+    if (delay > 0) {
+      return new Promise<T>((resolve, reject) => setTimeout(() => (shouldResolve ? resolve(result!) : reject(result)), delay))
+    }
     return new Promise<T>((resolve, reject) => (shouldResolve ? resolve(result!) : reject(result)))
   }
 
@@ -52,12 +139,19 @@ export default class MockProvider implements IProvider {
   async getPreferences(): Promise<AppPreferences> {
     return this.generateResponse({
       result: {
+        // Enhanced edition
+        // auto_ban_bt_player_peer: true,
+        // auto_ban_unknown_peer: true,
+        // auto_update_trackers_enabled: true,
+        // customize_trackers_list_url: 'http://example.com/',
+        // public_trackers: 'http://example.com/\nhttp://example.com/',
+
         add_to_top_of_queue: false,
         add_trackers: '',
         add_trackers_enabled: false,
         alt_dl_limit: 10240,
         alt_up_limit: 10240,
-        alternative_webui_enabled: false,
+        alternative_webui_enabled: true,
         alternative_webui_path: '/vuetorrent',
         announce_ip: '',
         announce_to_all_tiers: true,
@@ -259,6 +353,7 @@ export default class MockProvider implements IProvider {
   }
 
   async setPreferences(_: AppPreferencesPayload): Promise<void> {
+    console.log(_)
     return this.generateResponse({ shouldResolve: true })
   }
 
@@ -306,10 +401,6 @@ export default class MockProvider implements IProvider {
     return this.generateResponse({ shouldResolve: true })
   }
 
-  async getAuthenticationStatus(): Promise<boolean> {
-    return this.generateResponse({ result: true })
-  }
-
   /// LogController ///
 
   async getLogs(_0?: number, _1?: LogType): Promise<Log[]> {
@@ -326,19 +417,19 @@ export default class MockProvider implements IProvider {
           id: 1,
           message: 'Using config directory: /config/qBittorrent',
           timestamp,
-          type: LogType.NORMAL
+          type: LogType.INFO
         },
         {
           id: 2,
           message: 'Trying to listen on the following list of IP addresses: "0.0.0.0:6881,[::]:6881"',
           timestamp,
-          type: LogType.NORMAL
+          type: LogType.WARNING
         },
         {
           id: 3,
           message: 'Peer ID: "-qB4620-"',
           timestamp,
-          type: LogType.INFO
+          type: LogType.CRITICAL
         },
         {
           id: 4,
@@ -426,32 +517,367 @@ export default class MockProvider implements IProvider {
     return this.generateResponse()
   }
 
-  async getFeeds(withData: boolean): Promise<Feed[]> {
-    const feed: Feed = {
-      hasError: false,
-      isLoading: false,
-      lastBuildDate: '02 Aug 2023 16:00:46 +0000',
-      name: 'feed1',
-      title: 'RSS Feed',
-      uid: '{7a458bee-856a-4c0e-b751-11fd2183dfe4}',
-      url: 'https://www.example.com/feed'
-    }
-    if (withData) {
-      feed.articles = [
+  async getFeeds(_: boolean): Promise<Feed[]> {
+    return this.generateResponse({
+      result: [
         {
-          author: 'John Doe',
-          date: '02 Aug 2023 16:00:46 +0000',
-          description: 'This is a <strong>sample</strong> <i>description</i>',
-          id: 'SDb4v2op8wm',
-          isRead: false,
-          link: 'https://www.example.com/article/SDb4v2op8wm',
-          title: 'Sample title 1',
-          torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed1',
+          title: 'RSS Feed 1',
+          uid: '{7a458bee-856a-4c0e-b751-11fd2183dfe4}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm1',
+              isRead: false,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 1',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            },
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:47 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm1a',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 1a',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            },
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:48 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm1b',
+              isRead: false,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 1b',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: true,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed2',
+          title: 'RSS Feed 2',
+          uid: '{1ae133e7-ee5f-41c5-a11d-e59fcad3be52}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm2',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 2',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: true,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed3',
+          title: 'RSS Feed 3',
+          uid: '{4d2082fb-064e-4085-a1e4-ec5fd4d7651a}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm3',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 3',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed4',
+          title: 'RSS Feed 4',
+          uid: '{554d2a88-b3ab-41b4-82c1-7cd06931dd97}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm4',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 4',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed5',
+          title: 'RSS Feed 5',
+          uid: '{c22bc325-9874-481c-8b54-c8135fef5798}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm5',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 5',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed6',
+          title: 'RSS Feed 6',
+          uid: '{b4ecdc88-c192-464e-a616-2844cbc69007}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm6',
+              isRead: false,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 6',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed7',
+          title: 'RSS Feed 7',
+          uid: '{64e501a3-58c1-4397-8e90-5650e9dafe3f}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm7',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 7',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed8',
+          title: 'RSS Feed 8',
+          uid: '{52489995-2ac8-47f3-89da-714199693ec7}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm8',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 8',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed9',
+          title: 'RSS Feed 9',
+          uid: '{63e6d3eb-1fc7-4c78-a1dd-422c10631a65}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm9',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 9',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed10',
+          title: 'RSS Feed 10',
+          uid: '{41ca2a58-aec4-48c0-91c7-4f08e5e8318a}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm10',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 10',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed11',
+          title: 'RSS Feed 11',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179c}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm11',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 11',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed12',
+          title: 'RSS Feed 12',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179d}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm12',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 12',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed13',
+          title: 'RSS Feed 13',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179e}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm13',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 13',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed14',
+          title: 'RSS Feed 14',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179f}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm14',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 14',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed15',
+          title: 'RSS Feed 15',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179g}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm15',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 15',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
+        },
+        {
+          hasError: false,
+          isLoading: false,
+          lastBuildDate: '02 Aug 2023 16:00:46 +0000',
+          name: 'feed16',
+          title: 'RSS Feed 16',
+          uid: '{fafb2e55-979c-4188-a0a4-dc3375cc179h}',
+          url: 'https://www.example.com/feed',
+          articles: [
+            {
+              author: 'John Doe',
+              date: '02 Aug 2023 16:00:46 +0000',
+              description: 'This is a <strong>sample</strong> <i>description</i>',
+              id: 'SDb4v2op8wm16',
+              isRead: true,
+              link: 'https://www.example.com/article/SDb4v2op8wm',
+              title: 'Sample title 16',
+              torrentURL: 'https://www.example.com/article/SDb4v2op8wm'
+            }
+          ]
         }
       ]
-    }
-
-    return this.generateResponse({ result: [feed] })
+    })
   }
 
   async getRules(): Promise<FeedRule[]> {
@@ -508,12 +934,12 @@ export default class MockProvider implements IProvider {
     return this.generateResponse()
   }
 
-  async markAsRead(_0: string, _1: string): Promise<void> {
+  async markAsRead(_0: string, _1?: string): Promise<void> {
     return this.generateResponse()
   }
 
   async refreshFeed(_: string): Promise<void> {
-    return this.generateResponse()
+    return this.generateResponse({ delay: 1000 })
   }
 
   async getMatchingArticles(ruleName: string): Promise<Record<string, string[]>> {
@@ -598,8 +1024,17 @@ export default class MockProvider implements IProvider {
   /// SyncController ///
 
   async getMaindata(rid?: number): Promise<MaindataResponse> {
-    return this.generateResponse({
+    const torrents = MockProvider.hashes.reduce(
+      (obj, hash) => {
+        obj[hash] = this.generateMockedTorrent(hash)
+        return obj
+      },
+      {} as Record<string, RawQbitTorrent>
+    )
+
+    return this.generateResponse<MaindataResponse>({
       result: {
+        full_update: true,
         rid: rid ?? 1,
         server_state: {
           alltime_dl: 0,
@@ -627,110 +1062,103 @@ export default class MockProvider implements IProvider {
           use_alt_speed_limits: false,
           use_subcategories: false,
           write_cache_overload: '0'
-        }
+        },
+        torrents,
+        categories: this.categories,
+        tags: this.tags,
+        trackers: this.trackers
       }
     })
   }
 
-  async getTorrentPeers(_: string, rid?: number): Promise<TorrentPeersResponse> {
+  async syncTorrentPeers(_: string, rid?: number): Promise<TorrentPeersResponse> {
+    const rndmConnType = () => faker.helpers.arrayElement(['BT', 'μTP', 'WEB'])
+    const rndmCountry = () => faker.location.country()
+    const rndmCountryCode = () => faker.location.countryCode()
+    const rndmSpeed = () => faker.number.int({ min: 0, max: 50_000_000 }) // [0; 50 Mo/s]
+    const rndmData = () => faker.number.int({ min: 0, max: 5_000_000_000 }) // [0; 5 Go]
+
+    const ip1 = faker.internet.ipv4()
+    const port1 = faker.internet.port()
+
+    const ip2 = faker.internet.ipv4()
+    const port2 = faker.internet.port()
+
+    const ip3 = faker.internet.ipv4()
+    const port3 = faker.internet.port()
+
+    rid = rid ?? 0
     return this.generateResponse({
       result: {
         full_update: true,
-        rid: rid ?? 1,
+        rid: rid + 1,
         peers: {
-          '1.1.1.1:6889': {
+          [`${ip1}:${port1}`]: {
             client: 'qBittorrent v4.6.2',
-            connection: 'L',
-            country: 'United States',
-            country_code: 'US',
-            dl_speed: 0,
-            downloaded: 0,
-            files: '1',
+            connection: rndmConnType(),
+            country: rndmCountry(),
+            country_code: rndmCountryCode(),
+            dl_speed: rndmSpeed(),
+            downloaded: rndmData(),
+            files: 'ubuntu-23.10.1-desktop-amd64.iso',
             flags: 'D',
             flags_desc: 'dht',
-            ip: '1.1.1.1',
+            ip: ip1,
             peer_id_client: '-qB4620-',
-            port: 6889,
-            progress: 1,
-            relevance: 1,
-            up_speed: 0,
-            uploaded: 0
+            port: port1,
+            progress: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            relevance: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            up_speed: rndmSpeed(),
+            uploaded: rndmData()
+          },
+          [`${ip2}:${port2}`]: {
+            client: 'Tixati 2.84',
+            connection: rndmConnType(),
+            country: rndmCountry(),
+            country_code: rndmCountryCode(),
+            dl_speed: rndmSpeed(),
+            downloaded: rndmData(),
+            files: 'ubuntu/ubuntu-23.10.1-desktop-amd64.iso',
+            flags: 'D ? S H P',
+            flags_desc: 'D = Interested (local) and unchoked (peer)\n? = Not interested (peer) and unchoked (local)\nS = Peer snubbed\nH = Peer from DHT\nP = μTP',
+            ip: ip2,
+            peer_id_client: 'TIX0284-',
+            port: port2,
+            progress: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            relevance: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            up_speed: faker.number.int(50_000_000), // [0; 50 Mo/s]
+            uploaded: rndmData()
+          },
+          [`${ip3}:${port3}`]: {
+            client: 'Deluge/2.1.1 libtorrent/2.0.5.0',
+            connection: rndmConnType(),
+            country: rndmCountry(),
+            country_code: rndmCountryCode(),
+            dl_speed: rndmSpeed(),
+            downloaded: rndmData(),
+            files: 'ubuntu2/ubuntu-23.10.1-desktop-amd64.iso',
+            flags: 'U H X P',
+            flags_desc: 'U = Interested (peer) and unchoked (local)\nH = Peer from DHT\nX = Peer from PEX\nP = μTP',
+            ip: ip3,
+            peer_id_client: '-DE211s-',
+            port: port3,
+            progress: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            relevance: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
+            up_speed: rndmSpeed(),
+            uploaded: rndmData()
           }
         },
-        show_flags: true
+        show_flags: rid <= 0 || undefined
       }
     })
   }
 
   /// TorrentsController ///
 
-  async getTorrents(_?: GetTorrentPayload): Promise<Torrent[]> {
-    const result = MockProvider.hashes.map(hash => {
-      const added_on = faker.date.past().getTime()
-      const name = faker.system.fileName()
-      const num_complete = faker.number.int({ min: 0, max: 250 })
-      const num_incomplete = faker.number.int({ min: 0, max: 250 })
-      const state = faker.helpers.enumValue(TorrentState)
-      const total_size = faker.number.int({ min: 1_000_000, max: 1_000_000_000_000 }) // [1 Mo; 1 To]
-      const completed = faker.number.int({ min: 0, max: total_size })
-      const tracker = faker.internet.url()
-
-      return {
-        added_on,
-        amount_left: faker.number.int({ min: 0, max: total_size }),
-        auto_tmm: faker.datatype.boolean(),
-        availability: faker.number.float({ min: 0, max: 100, multipleOf: 0.01 }),
-        category: faker.helpers.arrayElement(['ISO', 'Other', 'Movie', 'Music', 'TV']),
-        completed,
-        completion_on: faker.date.between({ from: added_on, to: Date.now() }).getTime(),
-        content_path: faker.system.filePath(),
-        dl_limit: faker.number.float({ min: 0, max: 1, multipleOf: 0.01 }),
-        dlspeed: faker.number.int({ min: 0, max: 5_000_000 }), // [0; 5 Mo/s]
-        download_path: faker.system.directoryPath(),
-        downloaded: completed,
-        downloaded_session: completed,
-        eta: faker.number.int({ min: 0, max: 900000 }),
-        f_l_piece_prio: faker.datatype.boolean(),
-        force_start: faker.datatype.boolean(),
-        hash,
-        inactive_seeding_time_limit: -2,
-        infohash_v1: hash,
-        infohash_v2: '',
-        last_activity: faker.number.int({ min: 0, max: 50 }),
-        magnet_uri: `magnet:?xt=urn:btih:${hash}&dn=${name}&tr=${tracker}`,
-        max_inactive_seeding_time: -1,
-        max_ratio: -1,
-        max_seeding_time: -1,
-        name,
-        num_complete,
-        num_incomplete,
-        num_leechs: faker.number.int({ min: 0, max: num_incomplete }),
-        num_seeds: faker.number.int({ min: 0, max: num_complete }),
-        priority: 1,
-        progress: completed / total_size,
-        ratio: 0,
-        ratio_limit: -2,
-        save_path: faker.system.directoryPath(),
-        seeding_time: 0,
-        seeding_time_limit: -2,
-        seen_complete: -3600,
-        seq_dl: faker.datatype.boolean(),
-        size: total_size,
-        state,
-        super_seeding: faker.datatype.boolean(),
-        tags: '',
-        time_active: 0,
-        total_size,
-        tracker,
-        trackers_count: 1,
-        up_limit: 0,
-        uploaded: 0,
-        uploaded_session: 0,
-        upspeed: 0
-      }
+  async getTorrents(_?: GetTorrentPayload): Promise<QbitTorrent[]> {
+    return this.generateResponse({
+      result: MockProvider.hashes.map(hash => ({ ...this.generateMockedTorrent(hash), hash }))
     })
-
-    return this.generateResponse({ result })
   }
 
   async getTorrentTrackers(_: string): Promise<Tracker[]> {
@@ -810,13 +1238,53 @@ export default class MockProvider implements IProvider {
           priority: FilePriority.NORMAL,
           progress: 0,
           size: 5173995520
+        },
+        {
+          availability: 1,
+          index: 1,
+          is_seed: false,
+          name: 'ubuntu-24.10.1-desktop-amd64.iso',
+          piece_range: [0, 63],
+          priority: FilePriority.NORMAL,
+          progress: 0,
+          size: 5173995520
+        },
+        {
+          availability: 1,
+          index: 2,
+          is_seed: false,
+          name: 'ubuntu/ubuntu-23.10.1-desktop-amd64.iso',
+          piece_range: [0, 63],
+          priority: FilePriority.NORMAL,
+          progress: 0,
+          size: 5173995520
+        },
+        {
+          availability: 1,
+          index: 3,
+          is_seed: false,
+          name: 'ubuntu/ubuntu-24.10.1-desktop-amd64.iso',
+          piece_range: [0, 63],
+          priority: FilePriority.NORMAL,
+          progress: 0,
+          size: 5173995520
+        },
+        {
+          availability: 1,
+          index: 5,
+          is_seed: false,
+          name: 'ubuntu2/ubuntu-23.10.1-desktop-amd64.iso',
+          piece_range: [0, 63],
+          priority: FilePriority.NORMAL,
+          progress: 0,
+          size: 5173995520
         }
       ]
     })
   }
 
   async getAvailableTags(): Promise<string[]> {
-    return this.generateResponse({ result: [] })
+    return this.generateResponse({ result: this.tags })
   }
 
   async getTorrentProperties(hash: string): Promise<TorrentProperties> {
@@ -865,7 +1333,7 @@ export default class MockProvider implements IProvider {
     })
   }
 
-  async addTorrents(_0: File[], _1: string, _2: AddTorrentPayload): Promise<void> {
+  async addTorrents(_0: File[], _1: string, _2?: AddTorrentPayload): Promise<void> {
     return this.generateResponse()
   }
 
@@ -965,7 +1433,7 @@ export default class MockProvider implements IProvider {
     return this.generateResponse()
   }
 
-  async removeTorrentTag(_0: string[], _1: string[]): Promise<void> {
+  async removeTorrentTag(_0: string[], _1?: string[]): Promise<void> {
     return this.generateResponse()
   }
 
@@ -978,12 +1446,7 @@ export default class MockProvider implements IProvider {
   }
 
   async getCategories(): Promise<Category[]> {
-    return this.generateResponse({
-      result: [
-        { name: 'Movies', savePath: '/downloads/movies' },
-        { name: 'Series', savePath: '/downloads/series' }
-      ]
-    })
+    return this.generateResponse({ result: Object.values(this.categories) })
   }
 
   async deleteCategory(_: string[]): Promise<void> {

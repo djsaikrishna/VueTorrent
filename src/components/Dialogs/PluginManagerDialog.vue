@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import MixedButton from '@/components/Core/MixedButton.vue'
 import { useDialog } from '@/composables'
 import { useSearchEngineStore } from '@/stores'
 import { SearchPlugin } from '@/types/qbit/models'
@@ -83,12 +84,10 @@ function closeInstallDialog() {
 
         <v-spacer />
 
-        <v-btn :text="$t('dialogs.pluginManager.update')" color="accent" class="mr-2" :loading="updateLoading" @click="updatePlugins" />
+        <MixedButton icon="mdi-update" :text="$t('dialogs.pluginManager.update')" color="accent" class="mr-2" :loading="updateLoading" @click="updatePlugins" />
         <v-dialog v-model="installisOpened">
           <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" color="primary">
-              {{ $t('dialogs.pluginManager.install.activator') }}
-            </v-btn>
+            <MixedButton icon="mdi-toy-brick-plus" :text="$t('dialogs.pluginManager.install.activator')" v-bind="props" color="primary" />
           </template>
 
           <v-card :title="$t('dialogs.pluginManager.install.title')">
@@ -106,17 +105,22 @@ function closeInstallDialog() {
         </v-dialog>
       </v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" items-per-page="-1" :items="searchEngineStore.searchPlugins" :sort-by="[{ key: 'fullName', order: 'asc' }]" :loading="loading">
-          <template v-slot:item.enabled="{ item }">
+        <v-data-table
+          :mobile="null"
+          :headers="headers"
+          items-per-page="-1"
+          :items="searchEngineStore.searchPlugins"
+          :sort-by="[{ key: 'fullName', order: 'asc' }]"
+          :loading="loading">
+          <template v-slot:[`item.enabled`]="{ item }">
             <v-checkbox-btn :model-value="item.enabled" @click="onTogglePlugin(item)" />
           </template>
-          <template v-slot:item.url="{ item }">
+          <template v-slot:[`item.url`]="{ item }">
             <a :href="item.url" :title="item.name">{{ item.url }}</a>
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-icon color="red" icon="mdi-delete" @click="uninstallPlugin(item)" />
           </template>
-          <template v-slot:tfoot></template>
         </v-data-table>
       </v-card-text>
       <v-card-actions>

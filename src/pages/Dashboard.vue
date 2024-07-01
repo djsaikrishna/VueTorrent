@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import Toolbar from '@/components/Dashboard/Toolbar.vue'
 import TRC from '@/components/Dashboard/RightClick.vue'
+import Toolbar from '@/components/Dashboard/Toolbar.vue'
 import GridView from '@/components/Dashboard/Views/Grid/GridView.vue'
 import ListView from '@/components/Dashboard/Views/List/ListView.vue'
 import TableView from '@/components/Dashboard/Views/Table/TableView.vue'
@@ -8,10 +8,10 @@ import ConfirmDeleteDialog from '@/components/Dialogs/ConfirmDeleteDialog.vue'
 import { useArrayPagination } from '@/composables'
 import { DashboardDisplayMode } from '@/constants/vuetorrent'
 import { doesCommand } from '@/helpers'
-import { useDashboardStore, useDialogStore, useMaindataStore, useTorrentStore, useVueTorrentStore } from '@/stores'
+import { useDashboardStore, useDialogStore, useTorrentStore, useVueTorrentStore } from '@/stores'
 import { RightClickProperties, Torrent as TorrentType } from '@/types/vuetorrent'
 import { storeToRefs } from 'pinia'
-import { computed, nextTick, onBeforeMount, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -20,18 +20,17 @@ const router = useRouter()
 const dashboardStore = useDashboardStore()
 const { currentPage: dashboardPage, isSelectionMultiple, selectedTorrents, displayMode } = storeToRefs(dashboardStore)
 const dialogStore = useDialogStore()
-const maindataStore = useMaindataStore()
 const torrentStore = useTorrentStore()
-const { filteredTorrents } = storeToRefs(torrentStore)
+const { processedTorrents: torrents } = storeToRefs(torrentStore)
 const vuetorrentStore = useVueTorrentStore()
 
 const isListView = computed(() => displayMode.value === DashboardDisplayMode.LIST)
 const isGridView = computed(() => displayMode.value === DashboardDisplayMode.GRID)
 const isTableView = computed(() => displayMode.value === DashboardDisplayMode.TABLE)
 
-const { paginatedResults: paginatedTorrents, currentPage, pageCount } = useArrayPagination(filteredTorrents, vuetorrentStore.paginationSize, dashboardPage)
+const { paginatedResults: paginatedTorrents, currentPage, pageCount } = useArrayPagination(torrents, vuetorrentStore.paginationSize, dashboardPage)
 
-const isAllTorrentsSelected = computed(() => filteredTorrents.value.length <= selectedTorrents.value.length)
+const isAllTorrentsSelected = computed(() => torrents.value.length <= selectedTorrents.value.length)
 const rightClickProperties = reactive<RightClickProperties>({
   isVisible: false,
   offset: [0, 0]
@@ -58,7 +57,7 @@ function toggleSelectAll() {
   if (isAllTorrentsSelected.value) {
     dashboardStore.unselectAllTorrents()
   } else {
-    dashboardStore.selectTorrents(...filteredTorrents.value.map(t => t.hash))
+    dashboardStore.selectTorrents(...torrents.value.map(t => t.hash))
   }
 }
 
@@ -110,6 +109,7 @@ function startPress(e: Touch, torrent: TorrentType) {
 function endPress() {
   clearTimeout(timer.value)
 }
+
 // END mobile long press
 
 function handleKeyboardShortcuts(e: KeyboardEvent) {
@@ -122,7 +122,7 @@ function handleKeyboardShortcuts(e: KeyboardEvent) {
   // 'ctrl + A' => select torrents
   if (doesCommand(e) && e.key === 'a' && targetNode.tagName !== 'INPUT') {
     dashboardStore.unselectAllTorrents()
-    dashboardStore.selectTorrents(...filteredTorrents.value.map(torrent => torrent.hash))
+    dashboardStore.selectTorrents(...torrents.value.map(torrent => torrent.hash))
     e.preventDefault()
     return true
   }
@@ -154,8 +154,11 @@ function handleKeyboardShortcuts(e: KeyboardEvent) {
   if (e.key === 'Delete') {
     if (selectedTorrents.value.length === 0) return
 
-    dialogStore.createDialog(ConfirmDeleteDialog, { hashes: selectedTorrents.value })
-    e.preventDefault()
+    const searchInput = document.getElementById('searchInput')
+    if (document.activeElement !== searchInput) {
+      dialogStore.createDialog(ConfirmDeleteDialog, { hashes: selectedTorrents.value })
+      e.preventDefault()
+    }
     return true
   }
 
@@ -179,15 +182,8 @@ watch(
   }
 )
 
-onBeforeMount(async () => {
-  await maindataStore.fetchCategories()
-  await maindataStore.fetchTags()
-})
-
 onMounted(() => {
   document.addEventListener('keydown', handleKeyboardShortcuts)
-  isSelectionMultiple.value = false
-  scrollToTop()
 })
 
 onBeforeUnmount(() => {
@@ -218,11 +214,11 @@ onBeforeUnmount(() => {
       </v-expand-transition>
     </v-row>
 
-    <div v-if="filteredTorrents.length === 0" class="mt-5 text-xs-center">
+    <div v-if="torrents.length === 0" class="mt-5 text-xs-center">
       <p class="text-grey">{{ t('common.emptyList') }}</p>
     </div>
 
-    <div v-if="vuetorrentStore.isPaginationOnTop && !vuetorrentStore.isInfiniteScrollActive && pageCount > 1">
+    <div v-if="!vuetorrentStore.isInfiniteScrollActive && pageCount > 1">
       <v-pagination v-model="currentPage" :length="pageCount" next-icon="mdi-menu-right" prev-icon="mdi-menu-left" @input="scrollToTop" />
     </div>
 
@@ -255,16 +251,10 @@ onBeforeUnmount(() => {
       @startPress="startPress"
       @endPress="endPress" />
 
-    <div v-if="!vuetorrentStore.isPaginationOnTop && !vuetorrentStore.isInfiniteScrollActive && pageCount > 1">
+    <div v-if="!vuetorrentStore.isInfiniteScrollActive && pageCount > 1">
       <v-pagination v-model="currentPage" :length="pageCount" next-icon="mdi-menu-right" prev-icon="mdi-menu-left" @input="scrollToTop" />
     </div>
   </div>
 
   <TRC :right-click-properties="rightClickProperties" />
 </template>
-
-<style>
-.v-autocomplete .v-field:not(.v-field--focused) input {
-  display: none;
-}
-</style>

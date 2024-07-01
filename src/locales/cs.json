@@ -11,7 +11,10 @@
     "no": "Ne",
     "none": "(Žádné)",
     "ok": "OK",
+    "pause": "Pozastavit",
+    "resume": "Obnovit",
     "save": "Uložit",
+    "search": "Hledat",
     "selectAll": "Vybrat vše",
     "selectNone": "Nic nevybrat",
     "useGlobalSettings": "Použít globální nastavení",
@@ -190,12 +193,12 @@
     "sortBy": {
       "added_on": "Přidáno dne",
       "amount_left": "Zbývá množství",
-      "auto_tmm": "Automatické TMM",
       "availability": "Dostupnost",
+      "available_peers": "Stahující (swarm)",
+      "available_seeds": "Odesílající (swarm)",
       "avg_download_speed": "Průměrná rychlost stahování",
       "avg_upload_speed": "Průměrná rychlost nahrávání",
       "category": "Kategorie",
-      "completed": "Dokončeno",
       "completion_on": "Dokončeno dne",
       "content_path": "Cesta k obsahu",
       "default": "Výchozí",
@@ -205,8 +208,6 @@
       "downloaded_session": "Staženo (Relace)",
       "download_path": "Cesta ke stažení",
       "eta": "ETA",
-      "f_l_piece_prio": "Priorita prvního/posledního kusu",
-      "force_start": "Vynucený start",
       "globalSpeed": "Celková rychlost",
       "globalVolume": "Celkový objem",
       "hash": "Hash",
@@ -225,6 +226,18 @@
       "progress": "Postup",
       "ratio": "Poměr",
       "ratio_limit": "Poměrový limit"
+    }
+  },
+  "torrentDetail": {
+    "peers": {
+      "fields": {
+        "progress": "Postup"
+      }
+    }
+  },
+  "torrent": {
+    "properties": {
+      "priority": "Priorita"
     }
   }
 }

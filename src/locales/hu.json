@@ -6,12 +6,16 @@
     "delete": "Törlés",
     "disable": "Letilt",
     "disabled": "Letiltva",
+    "edit": "Szerkesztés",
     "emptyList": "Itt nincs mit látni!",
     "NA": "N/A",
     "no": "Nem",
     "none": "(Egyik sem)",
     "ok": "OK",
+    "pause": "Szüneteltetés",
+    "resume": "Folytatás",
     "save": "Mentés",
+    "search": "Keresés",
     "selectAll": "Összes kiválasztása",
     "selectNone": "Egyik sem",
     "useGlobalSettings": "Globális beállítások használata",
@@ -191,12 +195,12 @@
     "sortBy": {
       "added_on": "Hozzáadva",
       "amount_left": "Hátralévő mennyiség",
-      "auto_tmm": "Auto TMM",
       "availability": "Elérhetőség",
+      "available_peers": "Peerek (raj)",
+      "available_seeds": "Seedek (raj)",
       "avg_download_speed": "Átl. DL Sebesség",
       "avg_upload_speed": "Átl. UL Sebesség",
       "category": "Kategória",
-      "completed": "Befejezve",
       "completion_on": "Befejezés időpontja",
       "content_path": "Tartalom útvonala",
       "default": "Alapértelmezett",
@@ -206,8 +210,6 @@
       "downloaded_session": "Letöltve (Munkamenet)",
       "download_path": "Letöltési útvonal",
       "eta": "Becsült idő",
-      "f_l_piece_prio": "Első/Utolsó darab prioritása",
-      "force_start": "Kényszerített indítás",
       "globalSpeed": "Globális sebesség",
       "globalVolume": "Globális mennyiség",
       "hash": "Hash",
@@ -230,10 +232,8 @@
       "seeding_time": "Seedelési idő",
       "seeding_time_limit": "Seedelési idő korlát",
       "seen_complete": "Teljesként látva",
-      "seq_dl": "Szekvenciális letöltés",
       "size": "Méret",
       "state": "Állapot",
-      "super_seeding": "Szuper Seedelés",
       "tags": "Címkék",
       "time_active": "Aktív idő",
       "total_size": "Teljes méret",
@@ -510,22 +510,32 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "Cím szűrő",
-      "unread": "Csak olvasatlan cikkek megjelenítése"
+    "feeds": {
+      "empty": {
+        "action": "RSS hírcsatorna létrehozása"
+      },
+      "filters": {
+        "title": "Cím szűrő",
+        "unread": "Csak olvasatlan cikkek megjelenítése"
+      },
+      "item": {
+        "author": "Szerző: {author}",
+        "category": "Kategória: {category}",
+        "feedName": "Hírcsatorna neve: {name}"
+      },
+      "markAllAsRead": "Összes megjelölése olvasottként",
+      "promise": {
+        "error": "Hiba történt a cikkek megjelölése közben",
+        "pending": "Megjelölés...",
+        "success": "{n} cikk megjelölve olvasottként"
+      },
+      "title": "RSS cikkek"
     },
-    "item": {
-      "author": "Szerző: {author}",
-      "category": "Kategória: {category}",
-      "feedName": "Hírcsatorna neve: {name}"
-    },
-    "markAllAsRead": "Összes megjelölése olvasottként",
-    "promise": {
-      "error": "Hiba történt a cikkek megjelölése közben",
-      "pending": "Megjelölés...",
-      "success": "{n} cikk megjelölve olvasottként"
-    },
-    "title": "RSS cikkek"
+    "rules": {
+      "empty": {
+        "action": "RSS szabály létrehozása"
+      }
+    }
   },
   "searchEngine": {
     "filters": {
@@ -822,34 +832,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "Hírcsatorna hozzáadása",
-        "noFeeds": "Még nincsenek hírcsatornák",
-        "refreshAll": "Összes frissítése"
+      "autoDownloader": {
+        "enable": "RSS szabályok feldolgozásának engedélyezése",
+        "subheader": "RSS Torrent Automatikus Letöltő"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "RSS szabályok feldolgozásának engedélyezése",
-          "subheader": "RSS Torrent Automatikus Letöltő"
-        },
-        "reader": {
-          "enableProcessing": "RSS hírcsatornák lekérdezésének engedélyezése",
-          "feedsRefreshInterval": "Hírcsatornák frissítési intervalluma",
-          "maximumArticlesPerFeed": "Cikkek maximális száma hírcsatornánként",
-          "subheader": "RSS Olvasó"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "REPACK/PROPER epizódok letöltése",
-          "filters": "Szűrők",
-          "filtersHint": "Soronként egy",
-          "subheader": "RSS Okos Epizód Szűrő"
-        },
-        "useIdForRssLinks": "Azonosító használata az RSS cikk hivatkozásokhoz"
+      "reader": {
+        "enableProcessing": "RSS hírcsatornák lekérdezésének engedélyezése",
+        "feedsRefreshInterval": "Hírcsatornák frissítési intervalluma",
+        "maximumArticlesPerFeed": "Cikkek maximális száma hírcsatornánként",
+        "subheader": "RSS Olvasó"
       },
-      "rules": {
-        "createNew": "Szabály létrehozása",
-        "noRules": "Még nincsenek szabályok"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "REPACK/PROPER epizódok letöltése",
+        "filters": "Szűrők",
+        "filtersHint": "Soronként egy",
+        "subheader": "RSS Okos Epizód Szűrő"
+      },
+      "useIdForRssLinks": "Azonosító használata az RSS cikk hivatkozásokhoz"
     },
     "saveSuccess": "Beállítások mentve!",
     "speed": {
@@ -880,12 +879,7 @@
       "bittorrent": "BitTorrent",
       "connection": "Kapcsolat",
       "downloads": "Letöltések",
-      "rss": {
-        "feeds": "Hírcsatornák",
-        "general": "Általános",
-        "rules": "Szabályok",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "Sebesség",
       "tagsAndCategories": "Címkék & Kategóriák",
       "vuetorrent": {
@@ -1030,9 +1024,11 @@
       "not_supported": "Az aktuális kontextus nem biztonságos. Nem lehet regisztrálni a kezelőt.",
       "registered": "Mágnes kezelő regisztrálva."
     },
-    "new_version": "Új verzió elérhető!",
     "qbit": {
       "not_supported": "Csak qbit >= {version} verzió esetén érhető el"
+    },
+    "version": {
+      "new": "Új verzió elérhető!"
     }
   },
   "topbar": {
@@ -1101,19 +1097,15 @@
         "newPeersPlaceholder": "hoszt:port",
         "title": "Peerek hozzáadása"
       },
-      "emptyList": "Jelenleg nincsenek csatlakoztatott peerek",
-      "table": {
+      "empty": "Jelenleg nincsenek csatlakoztatott peerek",
+      "fields": {
         "client": "Ügyfél",
-        "connection": "Kapcsolat",
-        "downloaded": "Letöltve",
-        "downloadSpeed": "DL",
-        "files": "Fájlok",
+        "download": "Letöltés",
         "flags": "Jelzők",
         "host": "Hoszt",
         "progress": "Haladás",
         "relevance": "Relevancia",
-        "uploaded": "Feltöltve",
-        "upSpeed": "UL"
+        "upload": "Feltöltés"
       }
     },
     "tabs": {
@@ -1169,13 +1161,14 @@
       "download_speed": "Letöltési Sebesség",
       "empty_category": "(nincs kategória)",
       "empty_tags": "(nincsenek címkék)",
-      "empty_tracker_domain": "(nincs követő)",
+      "empty_tracker": "(nincs követő)",
       "eta": "Becsült Idő",
       "f_l_piece_prio": "Első / Utolsó Darab Prioritása",
       "forced": "Kényszerített állapot",
       "global_speed": "Globális Sebesség",
       "global_volume": "Globális Mennyiség",
       "hash": "Hash",
+      "inactive_seeding_time_limit": "Inaktív seedelési időkorlát",
       "infohash_v1": "Infohash v1",
       "infohash_v2": "Infohash v2",
       "is_private": "Privát torrent",
@@ -1214,23 +1207,20 @@
       "upload_speed": "Feltöltési Sebesség"
     },
     "state": {
-      "allocating": "Lefoglalás",
-      "checkingDL": "Ellenőrzés (befejezetlen)",
-      "checkingResumeData": "Folytatási adatok ellenőrzése",
-      "checkingUP": "Ellenőrzés (befejezett)",
+      "checking_resume_data": "Folytatási adatok ellenőrzése",
+      "dl_forced": "[F] Letöltés",
+      "dl_paused": "Szüneteltetve",
+      "dl_queued": "Sorbaállítva (DL)",
+      "dl_stalled": "Megakadt",
       "downloading": "Letöltés",
       "error": "Hiba",
-      "forcedDL": "[F] Letöltés",
-      "forcedUP": "[F] Feltöltés",
-      "metaDL": "Metaadatok",
-      "missingFiles": "Hiányzó Fájlok",
+      "meta_download": "Metaadatok",
+      "missing_files": "Hiányzó Fájlok",
       "moving": "Áthelyezés",
-      "pausedDL": "Szüneteltetve",
-      "pausedUP": "Kész",
-      "queuedDL": "Sorbaállítva (DL)",
-      "queuedUP": "Sorbaállítva (UP)",
-      "stalledDL": "Megakadt",
-      "stalledUP": "Seedelés",
+      "ul_forced": "[F] Feltöltés",
+      "ul_paused": "Kész",
+      "ul_queued": "Sorbaállítva (UP)",
+      "ul_stalled": "Seedelés",
       "unknown": "Ismeretlen",
       "uploading": "Feltöltés"
     }

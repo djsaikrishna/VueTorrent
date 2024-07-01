@@ -232,7 +232,12 @@ onBeforeUnmount(() => {
       <v-divider class="my-3" />
 
       <v-list-item class="text-select">
-        <v-data-table :headers="headers" :items="filteredResults" :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100, -1] }" :items-per-page.sync="selectedTab.itemsPerPage">
+        <v-data-table
+          :mobile="null"
+          :headers="headers"
+          :items="filteredResults"
+          :footer-props="{ itemsPerPageOptions: [10, 25, 50, 100, -1] }"
+          :items-per-page.sync="selectedTab.itemsPerPage">
           <template v-slot:top>
             <v-row>
               <v-col cols="12">
@@ -240,10 +245,10 @@ onBeforeUnmount(() => {
               </v-col>
             </v-row>
           </template>
-          <template v-slot:item.fileSize="{ item }">
+          <template v-slot:[`item.fileSize`]="{ item }">
             {{ formatData(item.fileSize, vuetorrentStore.useBinarySize) }}
           </template>
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:[`item.actions`]="{ item }">
             <v-btn icon="mdi-open-in-new" variant="flat" density="compact" @click.stop="openLink(item)" />
             <v-btn icon="mdi-download" variant="flat" density="compact" @click="downloadTorrent(item)"></v-btn>
           </template>

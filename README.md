@@ -2,12 +2,11 @@
 
 The sleekest looking WebUI for qBittorrent made with Vue.js!
 
-[![Discord](https://img.shields.io/badge/Discord_server-join-blue?logo=discord&logoColor=white)](https://discord.gg/KDQP7fR467)
-[![Wiki](https://img.shields.io/badge/Wiki-Click_me-blue)](https://github.com/VueTorrent/VueTorrent/wiki)
+[![Discord](https://img.shields.io/discord/1170618192956243998?logo=discord)](https://discord.gg/KDQP7fR467)
 
 ![VueTorrent](https://cdn.jsdelivr.net/gh/VueTorrent/VueTorrent@master/VueTorrent-logo.png)
 
-![Vue](https://img.shields.io/badge/Vue-%5E3.4.20-brightgreen) ![Vuetify](https://img.shields.io/badge/Vuetify-%5E3.5.6-brightgreen)
+![Vue](https://img.shields.io/badge/Vue-%5E3.4.26-brightgreen) ![Vuetify](https://img.shields.io/badge/Vuetify-%5E3.6.4-brightgreen)
 ![qBittorrent](https://img.shields.io/badge/qBittorrent-4.4%2B-brightgreen)
 
 ![stars](https://img.shields.io/github/stars/VueTorrent/VueTorrent) ![Forks](https://img.shields.io/github/forks/VueTorrent/VueTorrent)
@@ -38,6 +37,14 @@ The sleekest looking WebUI for qBittorrent made with Vue.js!
   <img src="readme_assets/screenshot-mobile-navbar-dark-mode.png" width="400" alt="Screenshot Mobile Dashboard (Light Mode)" /> 
 </p>
 
+## Demo
+
+A live demo **with mocked data** is available here: <https://vuetorrent.github.io/demo>
+
+> [!NOTE] This version isn't connected to a qBittorrent instance.
+>
+> Don't try to download torrents or change preferences, it won't work 😉
+
 ## Installation
 
 Checkout the [wiki](https://github.com/VueTorrent/VueTorrent/wiki/Installation)!
@@ -50,10 +57,9 @@ Checkout the [wiki](https://github.com/VueTorrent/VueTorrent/wiki/Installation)!
 - `npm run lint` (to format the code)
 - `docker-compose up -d` (starts a qbittorrent docker, optional)
 - Open the WebUI on localhost with the default credentials
-  - Default username is always `admin`
-  - Default password is `adminadmin` **on 4.6.0 and below**, and is generated on 4.6.1 and above
-- Make sure "CSRF protection" and "Host header verification" is disabled on the target server!
-- Edit `env.development` to tweak your dev environment (e.g. fake torrents)
+  - See #1720 for more details
+- Make sure "CSRF protection" and "Host header verification" is disabled in the qBittorrent preferences
+- Edit `env.development` to tweak your dev environment (e.g. mocked data)
 
 ## Features
 
@@ -82,27 +88,40 @@ Checkout the [wiki](https://github.com/VueTorrent/VueTorrent/wiki/Installation)!
   - mobile friendly! (can be installed as a PWA)
   - Configureable Dashboard: choose which torrent properties are shown for both busy and completed torrents
 - Optimized for the latest version of qBittorrent
+- Additional backend for improved experience, [see the repo for more info](https://github.com/VueTorrent/vuetorrent-backend)
+  - This is a work in progress, and is not required to use VueTorrent
+  - Stores server-side settings
+- Supports [qBittorrent Enhanced Edition](https://github.com/c0re100/qBittorrent-Enhanced-Edition) preferences
 
 ## Important Information
 
 VueTorrent is a **WebUI** (think of it as a "visual skin") that uses qBittorrent's API, enabling compatibility with automation solutions like the Servarr stack.
 
-Everything that is compatible with qBittorrent will work regardless of the WebUI you chose to use.
+Everything that is compatible with the classic qBittorrent WebUI will work regardless of the WebUI you chose to use, whether its VueTorrent or another one.
 
 ## Contributing
 
-Refer to the [Contributing Guidelines](https://github.com/VueTorrent/VueTorrent/blob/master/.github/CONTRIBUTING.md)
+We gladly accept contributions!
+
+Any help is appreciated, whether it's reporting bugs, suggesting enhancements, contributing code or localizing the app.
+
+See the [Contributing Guidelines](https://github.com/VueTorrent/VueTorrent/blob/master/.github/CONTRIBUTING.md) for more information.
 
 ## Support
 
-Open up an issue 😛
+- [![Discord](https://img.shields.io/discord/1170618192956243998?logo=discord)](https://discord.gg/KDQP7fR467)
+- [![Wiki](https://img.shields.io/badge/Wiki-blue)](https://github.com/VueTorrent/VueTorrent/wiki)
+- [![FAQ](https://img.shields.io/badge/FAQ-orange)](https://github.com/VueTorrent/VueTorrent/wiki/FAQ)
 
-but before you do that:
+If any of the above didn't help, feel free to open an issue!
 
-- confirm you're on the latest version of VueTorrent
-- confirm there is no other issue mentioning the same problem
+See the [Contributing Guidelines](https://github.com/VueTorrent/VueTorrent/blob/master/.github/CONTRIBUTING.md) for more information.
 
-<a href="https://www.buymeacoffee.com/wdaan"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=wdaan&button_colour=FFDD00&font_colour=000000&font_family=Arial&outline_colour=000000&coffee_colour=ffffff"></a>
+## Funding
+
+All donations are appreciated but purely optional.
+
+Checkout the sponsor section of the repository.
 
 ## Contributors
 

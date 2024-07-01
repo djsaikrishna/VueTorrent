@@ -1,19 +1,28 @@
 <script lang="ts" setup>
-import { TorrentState } from '@/constants/qbit'
-import { useMaindataStore, useTorrentStore, useVueTorrentStore } from '@/stores'
+import { TorrentState } from '@/constants/vuetorrent'
+import { getTorrentStateValue } from '@/helpers'
+import { useCategoryStore, useTagStore, useTorrentStore, useTrackerStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const { categories: _categories, tags: _tags, trackers: _trackers } = storeToRefs(useMaindataStore())
+const categoryStore = useCategoryStore()
+const tagStore = useTagStore()
 const { statusFilter, categoryFilter, tagFilter, trackerFilter } = storeToRefs(useTorrentStore())
-const vueTorrentStore = useVueTorrentStore()
+const trackerStore = useTrackerStore()
 
-const statuses = computed(() => Object.values(TorrentState).map(state => ({ title: t(`torrent.state.${state}`), value: state })))
-const categories = computed(() => [{ title: t('navbar.side.filters.uncategorized'), value: '' }, ..._categories.value.map(c => ({ title: c.name, value: c.name }))])
-const tags = computed(() => [{ title: t('navbar.side.filters.untagged'), value: null }, ..._tags.value.map(tag => ({ title: tag, value: tag }))])
-const trackers = computed(() => [{ title: t('navbar.side.filters.untracked'), value: '' }, ..._trackers.value.map(tracker => ({ title: tracker, value: tracker }))])
+const statuses = computed(() =>
+  Object.values(TorrentState)
+    .filter(state => typeof state === 'number')
+    .map(state => ({ title: t(`torrent.state.${getTorrentStateValue(state as TorrentState)}`), value: state }))
+)
+const categories = computed(() => [{ title: t('navbar.side.filters.uncategorized'), value: '' }, ...Array.from(categoryStore.categories.keys()).map(c => ({ title: c, value: c }))])
+const tags = computed(() => [{ title: t('navbar.side.filters.untagged'), value: null }, ...tagStore.tags.map(tag => ({ title: tag, value: tag }))])
+const trackers = computed(() => [
+  { title: t('navbar.side.filters.untracked'), value: null },
+  ...Array.from(trackerStore.trackers.keys()).map(tracker => ({ title: tracker, value: tracker }))
+])
 
 function selectAllStatuses() {
   statusFilter.value = []
@@ -22,13 +31,13 @@ function selectAllStatuses() {
 function selectActive() {
   statusFilter.value = [
     TorrentState.UPLOADING,
-    TorrentState.CHECKING_UP,
-    TorrentState.FORCED_UP,
-    TorrentState.ALLOCATING,
+    TorrentState.CHECKING_DISK,
+    TorrentState.UL_FORCED,
     TorrentState.DOWNLOADING,
-    TorrentState.META_DL,
-    TorrentState.CHECKING_DL,
-    TorrentState.FORCED_DL,
+    TorrentState.META_DOWNLOAD,
+    TorrentState.FORCED_META_DOWNLOAD,
+    TorrentState.CHECKING_DISK,
+    TorrentState.DL_FORCED,
     TorrentState.CHECKING_RESUME_DATA,
     TorrentState.MOVING
   ]
@@ -48,9 +57,9 @@ function selectAllTrackers() {
 </script>
 
 <template>
-  <v-list class="pb-0">
+  <v-list class="pb-0 inherit-fg">
     <v-list-item class="px-0 pb-3">
-      <v-list-item-title class="px-0 text-uppercase white--text ml-1 font-weight-normal text-caption">
+      <v-list-item-title class="px-0 text-uppercase ml-1 font-weight-light text-subtitle-2">
         {{ t('navbar.side.filters.state') }}
       </v-list-item-title>
       <v-select
@@ -69,14 +78,14 @@ function selectAllTrackers() {
           <v-divider />
         </template>
         <template v-slot:selection="{ item, index }">
-          <span v-if="index === 0 && statusFilter.length === 1" class="text-accent">{{ t(`torrent.state.${item.props.value}`) }}</span>
+          <span v-if="index === 0 && statusFilter.length === 1" class="text-accent">{{ item.title }}</span>
           <span v-else-if="index === 0" class="text-accent">{{ t('navbar.side.filters.activeFilter', statusFilter.length) }}</span>
         </template>
       </v-select>
     </v-list-item>
 
     <v-list-item class="px-0 pb-3">
-      <v-list-item-title class="px-0 text-uppercase white--text ml-1 font-weight-light text-subtitle-2">
+      <v-list-item-title class="px-0 text-uppercase ml-1 font-weight-light text-subtitle-2">
         {{ t('navbar.side.filters.category') }}
       </v-list-item-title>
       <v-select
@@ -105,7 +114,7 @@ function selectAllTrackers() {
     </v-list-item>
 
     <v-list-item class="px-0 pb-3">
-      <v-list-item-title class="px-0 text-uppercase white--text ml-1 font-weight-light text-subtitle-2">
+      <v-list-item-title class="px-0 text-uppercase ml-1 font-weight-light text-subtitle-2">
         {{ t('navbar.side.filters.tag') }}
       </v-list-item-title>
       <v-select
@@ -133,8 +142,8 @@ function selectAllTrackers() {
       </v-select>
     </v-list-item>
 
-    <v-list-item v-if="vueTorrentStore.showTrackerFilter" :class="{ 'px-0': true, 'pb-3': vueTorrentStore.showTrackerFilter }">
-      <v-list-item-title class="px-0 text-uppercase white--text ml-1 font-weight-light text-subtitle-2">
+    <v-list-item class="px-0 pb-3">
+      <v-list-item-title class="px-0 text-uppercase ml-1 font-weight-light text-subtitle-2">
         {{ t('navbar.side.filters.tracker') }}
       </v-list-item-title>
       <v-select

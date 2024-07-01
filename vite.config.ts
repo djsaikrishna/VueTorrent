@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
-import vuetify from 'vite-plugin-vuetify'
-import { resolve } from 'node:path'
 import topLevelAwait from 'vite-plugin-top-level-await'
+import vuetify from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
@@ -16,12 +16,12 @@ export default defineConfig(({ mode }) => {
     base: './',
     build: {
       target: 'esnext',
-      outDir: './vuetorrent/public',
+      outDir: mode === 'demo' ? './vuetorrent-demo' : './vuetorrent/public',
       rollupOptions: {
         output: {
           manualChunks: {
             // apexcharts: ['apexcharts', 'vue3-apexcharts'],
-            vue: ['vue', 'vue-router', 'vue-i18n', 'vue3-toastify', 'vuedraggable', 'pinia', 'pinia-plugin-persist'],
+            vue: ['vue', 'vue-router', 'vue-i18n', 'vue3-toastify', 'vuedraggable', 'pinia', 'pinia-persistence-plugin'],
             vuetify: ['vuetify']
           }
         }
@@ -50,13 +50,15 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       proxy: {
         '/api': {
-          target: `${proxyTarget}:${qBittorrentPort}`,
-          secure: false
+          changeOrigin: true,
+          secure: false,
+          target: `${proxyTarget}:${qBittorrentPort}`
         }
       }
     },
     test: {
       environment: 'jsdom',
+      globals: true,
       setupFiles: [resolve(__dirname, 'tests/setup.ts')],
       coverage: {
         reportsDirectory: './tests/unit/coverage'

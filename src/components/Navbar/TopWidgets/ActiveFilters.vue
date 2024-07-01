@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { extractHostname, getTorrentStateColor, getTorrentStateValue } from '@/helpers'
 import { useTorrentStore } from '@/stores'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
@@ -35,7 +36,9 @@ const isTrackerFilterPresent = computed(() => trackerFilter.value.length > 0)
 
 const globalFilterColor = computed(() => (globalFilterActive.value ? 'active-global' : 'active-global-disabled'))
 const textFilterColor = computed(() => (isTextFilterActive.value ? 'active-text' : 'active-text-disabled'))
-const singleStatusFilterColor = computed(() => (isStatusFilterActive.value ? `torrent-${statusFilter.value[0]}` : `torrent-${statusFilter.value[0]}-darken-2`))
+const singleStatusFilterColor = computed(() =>
+  isStatusFilterActive.value ? getTorrentStateColor(statusFilter.value[0]) : `${getTorrentStateColor(statusFilter.value[0])}-darken-2`
+)
 const statusFilterColor = computed(() => (isStatusFilterActive.value ? 'active-status' : 'active-status-disabled'))
 const categoryFilterColor = computed(() => (isCategoryFilterActive.value ? 'active-category' : 'active-category-disabled'))
 const tagFilterColor = computed(() => (isTagFilterActive.value ? 'active-tag' : 'active-tag-disabled'))
@@ -137,7 +140,7 @@ function resetTrackerFilter() {
       </v-slide-x-transition>
     </template>
 
-    <div class="d-flex flex-column gap mt-3">
+    <div class="d-flex flex-column flex-gap-row mt-3">
       <v-chip v-if="isTextFilterPresent" :color="textFilterColor" variant="elevated" closable @click:close="resetTextFilter()">
         <template v-slot:prepend>
           <v-icon class="mr-1" @click="toggleTextFilter()">{{ isTextFilterActive ? 'mdi-filter' : 'mdi-filter-off' }} </v-icon>
@@ -150,7 +153,7 @@ function resetTrackerFilter() {
           <template v-slot:prepend>
             <v-icon class="mr-1" @click="toggleStatusFilter()">{{ isStatusFilterActive ? 'mdi-filter' : 'mdi-filter-off' }} </v-icon>
           </template>
-          {{ t('navbar.top.active_filters.state', { value: t(`torrent.state.${statusFilter[0]}`) }) }}
+          {{ t('navbar.top.active_filters.state', { value: t(`torrent.state.${getTorrentStateValue(statusFilter[0])}`) }) }}
         </v-chip>
         <v-chip v-else :color="statusFilterColor" variant="elevated" closable @click:close="resetStatusFilter()">
           <template v-slot:prepend>
@@ -201,7 +204,7 @@ function resetTrackerFilter() {
               {{ isTrackerFilterActive ? 'mdi-filter' : 'mdi-filter-off' }}
             </v-icon>
           </template>
-          {{ t('navbar.top.active_filters.tracker', { value: trackerFilter[0] === '' ? t('navbar.side.filters.untracked') : trackerFilter[0] }) }}
+          {{ t('navbar.top.active_filters.tracker', { value: trackerFilter[0] === '' ? t('navbar.side.filters.untracked') : extractHostname(trackerFilter[0] ?? '') }) }}
         </v-chip>
         <v-chip v-else :color="trackerFilterColor" variant="elevated" closable @click:close="resetTrackerFilter()">
           <template v-slot:prepend>
@@ -215,9 +218,3 @@ function resetTrackerFilter() {
     </div>
   </v-menu>
 </template>
-
-<style scoped>
-.gap {
-  gap: 8px;
-}
-</style>

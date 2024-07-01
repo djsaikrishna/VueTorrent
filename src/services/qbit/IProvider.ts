@@ -6,10 +6,10 @@ import {
   Feed,
   FeedRule,
   Log,
+  QbitTorrent,
   SearchJob,
   SearchPlugin,
   SearchStatus,
-  Torrent,
   TorrentFile,
   TorrentProperties,
   Tracker
@@ -64,11 +64,6 @@ export default interface IProvider {
    * Logout from the application
    */
   logout(): Promise<void>
-
-  /**
-   * Get whether the user is authenticated
-   */
-  getAuthenticationStatus(): Promise<boolean>
 
   /// LogController ///
 
@@ -144,7 +139,7 @@ export default interface IProvider {
    * @param itemPath Feed path
    * @param articleId Article ID
    */
-  markAsRead(itemPath: string, articleId: string): Promise<void>
+  markAsRead(itemPath: string, articleId?: string): Promise<void>
 
   /**
    * Refresh a feed
@@ -236,7 +231,7 @@ export default interface IProvider {
    * @param hash Torrent hash
    * @param rid Request ID
    */
-  getTorrentPeers(hash: string, rid?: number): Promise<TorrentPeersResponse>
+  syncTorrentPeers(hash: string, rid?: number): Promise<TorrentPeersResponse>
 
   /// TorrentsController ///
 
@@ -244,7 +239,7 @@ export default interface IProvider {
    * Get torrents
    * @param payload Response modifiers
    */
-  getTorrents(payload?: GetTorrentPayload): Promise<Torrent[]>
+  getTorrents(payload?: GetTorrentPayload): Promise<QbitTorrent[]>
 
   /**
    * Get the torrent trackers
@@ -289,7 +284,7 @@ export default interface IProvider {
    * @param urls Torrent URLs
    * @param params Torrent add parameters
    */
-  addTorrents(torrents: File[], urls: string, params: AddTorrentPayload): Promise<void>
+  addTorrents(torrents: File[], urls: string, params?: AddTorrentPayload): Promise<void>
 
   /**
    * Set the torrent file priority
@@ -463,9 +458,9 @@ export default interface IProvider {
   /**
    * Remove tags to torrents
    * @param hashes Torrent hashes
-   * @param tags Tags to remove
+   * @param tags Tags to remove. If not provided, all tags will be removed
    */
-  removeTorrentTag(hashes: string[], tags: string[]): Promise<void>
+  removeTorrentTag(hashes: string[], tags?: string[]): Promise<void>
 
   /**
    * Create a new tag

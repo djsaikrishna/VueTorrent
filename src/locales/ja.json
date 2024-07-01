@@ -6,12 +6,16 @@
     "delete": "削除",
     "disable": "無効",
     "disabled": "無効",
+    "edit": "編集",
     "emptyList": "何も見つかりませんでした。",
     "NA": "N/A",
     "no": "いいえ",
     "none": "(なし)",
     "ok": "OK",
+    "pause": "一時停止",
+    "resume": "再開",
     "save": "保存",
+    "search": "検索",
     "selectAll": "すべて選択",
     "selectNone": "選択解除",
     "useGlobalSettings": "グローバル設定を使用する",
@@ -191,12 +195,12 @@
     "sortBy": {
       "added_on": "追加日時",
       "amount_left": "残り",
-      "auto_tmm": "自動Torrent管理",
       "availability": "可用性",
+      "available_peers": "ピア (スウォーム)",
+      "available_seeds": "シード (スウォーム)",
       "avg_download_speed": "平均DL速度",
       "avg_upload_speed": "平均UP速度",
       "category": "カテゴリー",
-      "completed": "完了",
       "completion_on": "完了日時",
       "content_path": "コンテンツパス",
       "default": "デフォルト",
@@ -206,8 +210,6 @@
       "downloaded_session": "DL済み (セッション)",
       "download_path": "ダウンロードパス",
       "eta": "予測所要時間",
-      "f_l_piece_prio": "最初と最後のピースを優先",
-      "force_start": "強制スタート",
       "globalSpeed": "全体速度",
       "globalVolume": "グローバルサイズ",
       "hash": "ハッシュ",
@@ -230,10 +232,8 @@
       "seeding_time": "最大シード時間",
       "seeding_time_limit": "シード時間制限",
       "seen_complete": "完了確認日時",
-      "seq_dl": "シーケンシャルダウンロード",
       "size": "サイズ",
       "state": "状態",
-      "super_seeding": "スーパーシードモード",
       "tags": "タグ",
       "time_active": "アクティブ時間",
       "total_size": "合計サイズ",
@@ -510,22 +510,32 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "タイトルフィルター",
-      "unread": "未読フィードのみ表示"
+    "feeds": {
+      "empty": {
+        "action": "RSSフィードを作成"
+      },
+      "filters": {
+        "title": "タイトルフィルター",
+        "unread": "未読フィードのみ表示"
+      },
+      "item": {
+        "author": "作者: {author}",
+        "category": "カテゴリー: {category}",
+        "feedName": "フィード名: {name}"
+      },
+      "markAllAsRead": "すべて既読にする",
+      "promise": {
+        "error": "フィードをマークする際にエラーが発生しました",
+        "pending": "マーク中...",
+        "success": "{n}件のフィードが既読としてマークされました"
+      },
+      "title": "RSSフィード"
     },
-    "item": {
-      "author": "作者: {author}",
-      "category": "カテゴリー: {category}",
-      "feedName": "フィード名: {name}"
-    },
-    "markAllAsRead": "すべて既読にする",
-    "promise": {
-      "error": "フィードをマークする際にエラーが発生しました",
-      "pending": "マーク中...",
-      "success": "{n}件のフィードが既読としてマークされました"
-    },
-    "title": "RSSフィード"
+    "rules": {
+      "empty": {
+        "action": "RSSルールを作成"
+      }
+    }
   },
   "searchEngine": {
     "filters": {
@@ -822,34 +832,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "フィードを追加",
-        "noFeeds": "フィードがありません",
-        "refreshAll": "すべて更新"
+      "autoDownloader": {
+        "enable": "RSSルール処理を有効にする",
+        "subheader": "RSS Torrent自動ダウンローダー"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "RSSルール処理を有効にする",
-          "subheader": "RSS Torrent自動ダウンローダー"
-        },
-        "reader": {
-          "enableProcessing": "RSSフィードの取得を有効にする",
-          "feedsRefreshInterval": "フィードの更新間隔",
-          "maximumArticlesPerFeed": "フィードごとの記事数の上限",
-          "subheader": "RSSリーダー"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "REPACK/PROPERエピソードをダウンロードする",
-          "filters": "フィルター",
-          "filtersHint": "1行に1つのフィルター",
-          "subheader": "RSS スマートエピソードフィルター"
-        },
-        "useIdForRssLinks": "RSS記事のリンクにIDを使用する"
+      "reader": {
+        "enableProcessing": "RSSフィードの取得を有効にする",
+        "feedsRefreshInterval": "フィードの更新間隔",
+        "maximumArticlesPerFeed": "フィードごとの記事数の上限",
+        "subheader": "RSSリーダー"
       },
-      "rules": {
-        "createNew": "ルールを作成",
-        "noRules": "ルールがありません"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "REPACK/PROPERエピソードをダウンロードする",
+        "filters": "フィルター",
+        "filtersHint": "1行に1つのフィルター",
+        "subheader": "RSS スマートエピソードフィルター"
+      },
+      "useIdForRssLinks": "RSS記事のリンクにIDを使用する"
     },
     "saveSuccess": "設定が保存されました!",
     "speed": {
@@ -880,12 +879,7 @@
       "bittorrent": "BitTorrent",
       "connection": "接続",
       "downloads": "ダウンロード",
-      "rss": {
-        "feeds": "フィード",
-        "general": "一般",
-        "rules": "ルール",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "速度",
       "tagsAndCategories": "タグ/カテゴリー",
       "vuetorrent": {
@@ -1030,9 +1024,11 @@
       "not_supported": "現在のコンテキストは安全ではありません。ハンドラーを登録できません。",
       "registered": "マグネットハンドラーが登録されました。"
     },
-    "new_version": "新しいバージョンが利用可能です!",
     "qbit": {
       "not_supported": "qBittorrent >= {version}でのみ利用可能です"
+    },
+    "version": {
+      "new": "新しいバージョンが利用可能です!"
     }
   },
   "topbar": {
@@ -1101,19 +1097,15 @@
         "newPeersPlaceholder": "ホスト:ポート",
         "title": "ピアを追加する"
       },
-      "emptyList": "現在ピアが接続されていません",
-      "table": {
+      "empty": "現在ピアが接続されていません",
+      "fields": {
         "client": "クライアント",
-        "connection": "接続",
-        "downloaded": "DL済み",
-        "downloadSpeed": "DL",
-        "files": "ファイル",
+        "download": "ダウンロード",
         "flags": "フラグ",
         "host": "ホスト",
         "progress": "進捗状況",
         "relevance": "関連性",
-        "uploaded": "UP済み",
-        "upSpeed": "UP"
+        "upload": "アップロード"
       }
     },
     "tabs": {
@@ -1169,13 +1161,14 @@
       "download_speed": "DL速度",
       "empty_category": "(カテゴリーなし)",
       "empty_tags": "(タグなし)",
-      "empty_tracker_domain": "(トラッカーなし)",
+      "empty_tracker": "(トラッカーなし)",
       "eta": "予測所要時間",
       "f_l_piece_prio": "最初と最後のピースを優先",
       "forced": "強制状態",
       "global_speed": "全体速度",
       "global_volume": "グローバルサイズ",
       "hash": "ハッシュ",
+      "inactive_seeding_time_limit": "非アクティブシード時間制限",
       "infohash_v1": "Infoハッシュ v1",
       "infohash_v2": "Infoハッシュ v2",
       "is_private": "プライベートTorrent",
@@ -1214,23 +1207,20 @@
       "upload_speed": "UP速度"
     },
     "state": {
-      "allocating": "割り当て中",
-      "checkingDL": "チェック中 (未完了)",
-      "checkingResumeData": "再開データを確認中",
-      "checkingUP": "チェック中 (完了)",
+      "checking_resume_data": "再開データを確認中",
+      "dl_forced": "[F] ダウンロード中",
+      "dl_paused": "一時停止",
+      "dl_queued": "待機中 (DL)",
+      "dl_stalled": "停滞",
       "downloading": "ダウンロード中",
       "error": "エラー",
-      "forcedDL": "[F] ダウンロード中",
-      "forcedUP": "[F] アップロード中",
-      "metaDL": "メタデータ",
-      "missingFiles": "ファイル不足",
+      "meta_download": "メタデータ",
+      "missing_files": "ファイル不足",
       "moving": "移動中",
-      "pausedDL": "一時停止",
-      "pausedUP": "完了",
-      "queuedDL": "待機中 (DL)",
-      "queuedUP": "待機中 (UP)",
-      "stalledDL": "停滞",
-      "stalledUP": "シード中",
+      "ul_forced": "[F] アップロード中",
+      "ul_paused": "完了",
+      "ul_queued": "待機中 (UP)",
+      "ul_stalled": "シード中",
       "unknown": "不明",
       "uploading": "アップロード中"
     }

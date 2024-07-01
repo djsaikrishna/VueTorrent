@@ -4,14 +4,13 @@ import DnDZone from '@/components/DnDZone.vue'
 import Navbar from '@/components/Navbar/Navbar.vue'
 import { TitleOptions } from '@/constants/vuetorrent'
 import { formatPercent, formatSpeed } from '@/helpers'
-import { useAddTorrentStore, useAppStore, useAuthStore, useDialogStore, useLogStore, useMaindataStore, usePreferenceStore, useTorrentStore, useVueTorrentStore } from '@/stores'
+import { backend } from '@/services/backend'
+import { useAddTorrentStore, useAppStore, useDialogStore, useLogStore, useMaindataStore, usePreferenceStore, useTorrentStore, useVueTorrentStore } from '@/stores'
 import { storeToRefs } from 'pinia'
-
 import { onBeforeMount, watch, watchEffect } from 'vue'
 
 const addTorrentStore = useAddTorrentStore()
 const appStore = useAppStore()
-const authStore = useAuthStore()
 const dialogStore = useDialogStore()
 const logStore = useLogStore()
 const maindataStore = useMaindataStore()
@@ -22,7 +21,7 @@ const vuetorrentStore = useVueTorrentStore()
 const { language, uiTitleCustom, uiTitleType, useBitSpeed } = storeToRefs(vuetorrentStore)
 
 const checkAuthentication = async () => {
-  await authStore.updateAuthStatus()
+  await appStore.fetchAuthStatus()
 }
 
 const blockContextMenu = () => {
@@ -42,6 +41,8 @@ const blockContextMenu = () => {
 }
 
 onBeforeMount(() => {
+  backend.init(vuetorrentStore.backendUrl)
+  backend.ping()
   vuetorrentStore.updateTheme()
   vuetorrentStore.setLanguage(language.value)
   checkAuthentication()
@@ -49,18 +50,15 @@ onBeforeMount(() => {
 })
 
 watch(
-  () => authStore.isAuthenticated,
+  () => appStore.isAuthenticated,
   async isAuthenticated => {
     if (isAuthenticated) {
-      appStore.pushInterval(() => maindataStore.updateMaindata(), vuetorrentStore.refreshInterval)
-      await maindataStore.updateMaindata()
+      maindataStore.forceMaindataSync()
       await preferencesStore.fetchPreferences()
       await logStore.cleanAndFetchLogs()
-      await maindataStore.fetchCategories()
-      await maindataStore.fetchTags()
       addTorrentStore.initForm()
     } else {
-      appStore.clearIntervals()
+      maindataStore.stopMaindataSync()
     }
   },
   {
@@ -104,12 +102,12 @@ watchEffect(() => {
 
 <template>
   <v-app class="text-noselect">
-    <component v-for="dialog in dialogStore.dialogs" :is="dialog.component" v-bind="{ guid: dialog.guid, ...dialog.props }" />
-    <Navbar v-if="authStore.isAuthenticated" />
+    <component v-for="dialog in dialogStore.dialogs.values()" :is="dialog.component" v-bind="{ guid: dialog.guid, ...dialog.props }" />
+    <Navbar v-if="appStore.isAuthenticated" />
     <v-main>
       <router-view />
     </v-main>
-    <AddPanel />
+    <AddPanel v-if="appStore.isAuthenticated" />
     <DnDZone />
   </v-app>
 </template>

@@ -6,12 +6,17 @@
     "delete": "Supprimer",
     "disable": "Désactiver",
     "disabled": "Désactivé",
+    "edit": "Modifier",
     "emptyList": "Rien à voir ici !",
+    "global_value": "Valeur globale",
     "NA": "N/A",
     "no": "Non",
     "none": "(Aucun)",
     "ok": "OK",
+    "pause": "Pause",
+    "resume": "Reprendre",
     "save": "Enregistrer",
+    "search": "Rechercher",
     "selectAll": "Tout sélectionner",
     "selectNone": "Tout désélectionner",
     "useGlobalSettings": "Utiliser les paramètres globaux",
@@ -191,12 +196,12 @@
     "sortBy": {
       "added_on": "Ajouté le",
       "amount_left": "Montant restant",
-      "auto_tmm": "TMM automatique",
       "availability": "Disponibilité",
+      "available_peers": "Pairs (essaim)",
+      "available_seeds": "Sources  (essaim)",
       "avg_download_speed": "Vitesse DL moyenne",
       "avg_upload_speed": "Vitesse UL moyenne",
       "category": "Catégorie",
-      "completed": "Terminé",
       "completion_on": "Terminé le",
       "content_path": "Chemin du contenu",
       "default": "Par défaut",
@@ -206,8 +211,6 @@
       "downloaded_session": "Téléchargé (Session)",
       "download_path": "Chemin de téléchargement",
       "eta": "ETA",
-      "f_l_piece_prio": "Priorité aux premières / dernières pièces",
-      "force_start": "Forcer le démarrage",
       "globalSpeed": "Vitesse globale",
       "globalVolume": "Volume global",
       "hash": "Hash",
@@ -230,19 +233,17 @@
       "seeding_time": "Temps de seed",
       "seeding_time_limit": "Limite du temps de seed",
       "seen_complete": "Vu complété",
-      "seq_dl": "Téléchargement séquentiel",
       "size": "Taille",
       "state": "État",
-      "super_seeding": "Super Partage",
       "tags": "Étiquettes",
       "time_active": "Temps actif",
       "total_size": "Taille totale",
       "tracker": "Tracker",
       "trackers_count": "Nombre de trackers",
       "up_limit": "Limite d'envoi",
-      "uploaded": "Partagé (Global)",
-      "uploaded_session": "Partagé (Session)",
-      "upspeed": "Vitesse de partage"
+      "uploaded": "Téléversé (Global)",
+      "uploaded_session": "Téléversé (Session)",
+      "upspeed": "Vitesse de téléversement"
     },
     "sortLabel": "Trier par",
     "toggleSearchFilter": "(Dés)activer le filtre de recherche",
@@ -301,6 +302,11 @@
     "connectionStatus": {
       "dht_nodes": "Nœuds DHT",
       "externalIp": "Adresse IP externe",
+      "fetch_geo_failed": "Impossible de récupérer les informations de géolocalisation",
+      "fetch_isp_failed": "Impossible de récupérer les informations du FAI",
+      "geo_details": "Informations de géolocalisation",
+      "isp_details": "Informations du FAI",
+      "noExternalIp": "Impossible de détecter à partir des logs",
       "status": "Statut de connexion",
       "total_peer_connections": "Connexions entre pairs actives"
     },
@@ -510,22 +516,32 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "Filtre de titre",
-      "unread": "Montrer uniquement les articles non-lu"
+    "feeds": {
+      "empty": {
+        "action": "Créer un flux RSS"
+      },
+      "filters": {
+        "title": "Filtre de titre",
+        "unread": "Montrer uniquement les articles non-lu"
+      },
+      "item": {
+        "author": "Auteur: {author}",
+        "category": "Categorie : {category}",
+        "feedName": "Nom du flux: {name}"
+      },
+      "markAllAsRead": "Marquer tout comme lu",
+      "promise": {
+        "error": "Une error s'est produite lors du marquage des articles",
+        "pending": "Marquage en cours...",
+        "success": "{n} articles marqués comme lus"
+      },
+      "title": "Articles RSS"
     },
-    "item": {
-      "author": "Auteur: {author}",
-      "category": "Categorie : {category}",
-      "feedName": "Nom du flux: {name}"
-    },
-    "markAllAsRead": "Marquer tout comme lu",
-    "promise": {
-      "error": "Une error s'est produite lors du marquage des articles",
-      "pending": "Marquage en cours...",
-      "success": "{n} articles marqués comme lus"
-    },
-    "title": "Articles RSS"
+    "rules": {
+      "empty": {
+        "action": "Créer une règle RSS"
+      }
+    }
   },
   "searchEngine": {
     "filters": {
@@ -822,34 +838,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "Ajouter un flux",
-        "noFeeds": "Pas encore de flux",
-        "refreshAll": "Tout actualiser"
+      "autoDownloader": {
+        "enable": "Activer le traitement des règles RSS",
+        "subheader": "Téléchargement automatique de torrents via RSS"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "Activer le traitement des règles RSS",
-          "subheader": "Téléchargement automatique de torrents via RSS"
-        },
-        "reader": {
-          "enableProcessing": "Activer la récupération des flux RSS",
-          "feedsRefreshInterval": "Intervalle de rafraîchissement des flux",
-          "maximumArticlesPerFeed": "Nombre maximum d'articles par flux",
-          "subheader": "Lecteur RSS"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "Télécharger les épisodes REPACK/PROPER",
-          "filters": "Filtres",
-          "filtersHint": "Un par ligne",
-          "subheader": "Filtre intelligent pour les épisodes RSS"
-        },
-        "useIdForRssLinks": "Utiliser les ID pour les liens RSS"
+      "reader": {
+        "enableProcessing": "Activer la récupération des flux RSS",
+        "feedsRefreshInterval": "Intervalle de rafraîchissement des flux",
+        "maximumArticlesPerFeed": "Nombre maximum d'articles par flux",
+        "subheader": "Lecteur RSS"
       },
-      "rules": {
-        "createNew": "Créer une règle",
-        "noRules": "Pas encore de règles"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "Télécharger les épisodes REPACK/PROPER",
+        "filters": "Filtres",
+        "filtersHint": "Un par ligne",
+        "subheader": "Filtre intelligent pour les épisodes RSS"
+      },
+      "useIdForRssLinks": "Utiliser les ID pour les liens RSS"
     },
     "saveSuccess": "Paramètres sauvegardés !",
     "speed": {
@@ -880,12 +885,7 @@
       "bittorrent": "BitTorrent",
       "connection": "Connexion",
       "downloads": "Téléchargements",
-      "rss": {
-        "feeds": "Flux",
-        "general": "Général",
-        "rules": "Règles",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "Vitesse",
       "tagsAndCategories": "Étiquettes & Catégories",
       "vuetorrent": {
@@ -917,6 +917,7 @@
         "customTitle": "Titre personnalisé",
         "dateFormat": "Format de la date",
         "download": "Exporter les paramètres",
+        "enableHashColors": "Activer les couleurs générées sur les capsules",
         "fileContentInterval": "Intervalle de rafraîchissement du contenu des torrents",
         "hideChipIfUnset": "Masquer les capsules si non défini",
         "historySize": "Taille de l'historique sur les champs éligibles",
@@ -1022,6 +1023,7 @@
       "pending": "Envoi des torrents...",
       "success": "{n} torrent ajouté | {n} torrents ajoutés"
     },
+    "backend_unreachable": "Le back-end est injoignable",
     "copy": {
       "error": "Impossible de copier, le contexte n'est pas sécurisé !",
       "success": "Copié dans le presse-papiers !"
@@ -1030,9 +1032,11 @@
       "not_supported": "Le contexte actuel n'est pas sécurisé. Impossible d'enregistrer le handler.",
       "registered": "Handler des liens magnets enregistré."
     },
-    "new_version": "Nouvelle version disponible !",
     "qbit": {
       "not_supported": "Disponible uniquement pour qbit >= {version}"
+    },
+    "version": {
+      "new": "Nouvelle version disponible !"
     }
   },
   "topbar": {
@@ -1060,6 +1064,7 @@
   "torrentDetail": {
     "content": {
       "fileInfo": "{n} fichier | {n} fichiers",
+      "filter_placeholder": "Rechercher dans l'arborescence",
       "folderInfo": "{n} dossier | {n} dossiers",
       "priority": "Définir la priorité",
       "rename": {
@@ -1100,19 +1105,15 @@
         "newPeersPlaceholder": "hôte:port",
         "title": "Ajouter des pairs"
       },
-      "emptyList": "Aucun pair n'est connecté actuellement",
-      "table": {
+      "empty": "Aucun pair n'est connecté actuellement",
+      "fields": {
         "client": "Client",
-        "connection": "Connexion",
-        "downloaded": "Téléchargé",
-        "downloadSpeed": "DL",
-        "files": "Dossiers",
+        "download": "Téléchargement",
         "flags": "Drapeaux",
         "host": "Hôte",
         "progress": "Progression",
         "relevance": "Pertinence",
-        "uploaded": "Partagé",
-        "upSpeed": "UL"
+        "upload": "Partage"
       }
     },
     "tabs": {
@@ -1156,8 +1157,11 @@
       "avg_download_speed": "Vitesse de téléchargement moyenne",
       "avg_upload_speed": "Vitesse d'envoi moyenne",
       "category": "Catégorie",
+      "comment": "Commentaire",
       "completed_on": "Terminé le",
       "content_path": "Chemin du contenu",
+      "created_by": "Créé par",
+      "creation_date": "Date de création",
       "downloaded": "Téléchargé (global)",
       "downloaded_session": "Téléchargé (session)",
       "download_limit": "Limite de téléchargement",
@@ -1165,18 +1169,22 @@
       "download_speed": "Vitesse de téléchargement",
       "empty_category": "(aucune catégorie)",
       "empty_tags": "(aucune étiquette)",
-      "empty_tracker_domain": "(aucun tracker)",
+      "empty_tracker": "(aucun tracker)",
       "eta": "ETA",
       "f_l_piece_prio": "Priorité à la première / dernière pièce",
       "forced": "État forcé",
       "global_speed": "Vitesse globale",
       "global_volume": "Volume global",
       "hash": "Hash",
+      "inactive_seeding_time_limit": "Limite du temps de seed inactif",
       "infohash_v1": "Infohash v1",
       "infohash_v2": "Infohash v2",
+      "is_private": "Torrent privé",
       "last_activity": "Dernière activité",
       "magnet": "Lien magnet",
       "name": "Titre du torrent",
+      "nb_connections": "Nombre total de connexions",
+      "nb_connections_limit": "Limites de connexion",
       "num_leechs": "Pairs (connectés)",
       "num_seeds": "Sources (connectées)",
       "peers": "Pairs",
@@ -1185,6 +1193,7 @@
       "progress_bar": "Barre de progression",
       "ratio": "Ratio",
       "ratio_limit": "Limite du ratio",
+      "reannounce": "Prochaine annonce dans",
       "save_path": "Sauvegarder le chemin",
       "seeding_time": "Temps de seed",
       "seeding_time_limit": "Limite du temps de seed",
@@ -1197,6 +1206,7 @@
       "tags": "Étiquettes",
       "time_active": "Temps d'activité",
       "total_size": "Taille totale",
+      "total_wasted": "Données gaspillées",
       "tracker": "Tracker",
       "trackers_count": "Nombre de trackers",
       "uploaded": "Partagé (global)",
@@ -1205,23 +1215,20 @@
       "upload_speed": "Vitesse d'envoi"
     },
     "state": {
-      "allocating": "Allocation",
-      "checkingDL": "Vérification (incomplète)",
-      "checkingResumeData": "Vérification des données de reprise",
-      "checkingUP": "Vérification (terminée)",
+      "checking_resume_data": "Vérification des données de reprise",
+      "dl_forced": "[F] Téléchargement",
+      "dl_paused": "En pause",
+      "dl_queued": "En attente (DL)",
+      "dl_stalled": "En suspens",
       "downloading": "Téléchargement",
       "error": "Erreur",
-      "forcedDL": "[F] Téléchargement",
-      "forcedUP": "[F] Envoi",
-      "metaDL": "Métadonnées",
-      "missingFiles": "Fichiers manquants",
+      "meta_download": "Métadonnées",
+      "missing_files": "Fichiers manquants",
       "moving": "Déplacement",
-      "pausedDL": "En pause",
-      "pausedUP": "Terminé",
-      "queuedDL": "En attente (DL)",
-      "queuedUP": "En attente (UP)",
-      "stalledDL": "En suspens",
-      "stalledUP": "En cours de seed",
+      "ul_forced": "[F] Envoi",
+      "ul_paused": "Terminé",
+      "ul_queued": "En attente (UP)",
+      "ul_stalled": "En cours de seed",
       "unknown": "Inconnu",
       "uploading": "Envoi"
     }

@@ -1,4 +1,5 @@
 {
+  "_comments": "僅從Tolgee生成，請不要手動修改不然會被推翻",
   "common": {
     "active": "活躍",
     "cancel": "取消",
@@ -6,12 +7,18 @@
     "delete": "移除",
     "disable": "停用",
     "disabled": "已停用",
+    "edit": "編輯",
     "emptyList": "這裡沒東西可看！",
+    "global_value": "全局設定",
     "NA": "不適用",
     "no": "否",
     "none": "(無)",
     "ok": "確認",
+    "pause": "暫停",
+    "refresh": "更新",
+    "resume": "繼續",
     "save": "儲存",
+    "search": "搜尋",
     "selectAll": "選擇全部",
     "selectNone": "取消選擇全部",
     "useGlobalSettings": "使用全域設定",
@@ -101,6 +108,16 @@
       "none": "無",
       "title": "種子停止條件"
     },
+    "themes": {
+      "dark": {
+        "legacy": "傳統",
+        "redesigned": "重制版"
+      },
+      "light": {
+        "legacy": "傳統",
+        "redesigned": "重制版"
+      }
+    },
     "titleOptions": {
       "custom": "自訂",
       "default": "預設",
@@ -131,7 +148,7 @@
   "dashboard": {
     "displayMode": {
       "grid": "網格",
-      "list": "列表",
+      "list": "清單",
       "table": "表格",
       "title": "顯示模式"
     },
@@ -176,6 +193,7 @@
       },
       "tags": {
         "disabled_title": "無標籤",
+        "remove_all": "全部刪除",
         "title": "設定標籤"
       },
       "top": {
@@ -191,12 +209,12 @@
     "sortBy": {
       "added_on": "新增於",
       "amount_left": "剩餘大小",
-      "auto_tmm": "自動種子管理（ATM）",
       "availability": "可得性",
+      "available_peers": "下載者 (群)",
+      "available_seeds": "種子數 (群)",
       "avg_download_speed": "平均下載速率",
       "avg_upload_speed": "平均上傳速率",
       "category": "分類",
-      "completed": "已完成",
       "completion_on": "完成於",
       "content_path": "內容路徑",
       "default": "預設",
@@ -206,8 +224,6 @@
       "downloaded_session": "已下載 (會話)",
       "download_path": "下載路徑",
       "eta": "預估剩餘時間",
-      "f_l_piece_prio": "首末塊優先",
-      "force_start": "強制繼續",
       "globalSpeed": "全域速率",
       "globalVolume": "全域大小",
       "hash": "雜湊值",
@@ -230,10 +246,8 @@
       "seeding_time": "做種時間",
       "seeding_time_limit": "做種時間限制",
       "seen_complete": "最後完整可見",
-      "seq_dl": "順序下載",
       "size": "大小",
       "state": "狀態",
-      "super_seeding": "超級做種",
       "tags": "標籤",
       "time_active": "經過時間",
       "total_size": "總大小",
@@ -287,6 +301,23 @@
       "submit": "新增種子",
       "title": "新增種子"
     },
+    "bulkRenameFiles": {
+      "col_origin_name": "原名稱",
+      "col_result_name": "結果",
+      "duplicated": "重複的檔案名稱",
+      "flags": "旗標",
+      "fold": "收起",
+      "not_changed": "檔案名稱未變更",
+      "notForFolder": "不支持目錄更名",
+      "nothing_to_do": "無待執行任務",
+      "regexp": "正規表示式",
+      "run": "執行",
+      "select_regex_flags": "選擇正規表示式旗標",
+      "success": "成功改名",
+      "target": "變更為",
+      "title": "批量改名",
+      "unfold": "展開"
+    },
     "category": {
       "name": "分類名稱",
       "nameRequired": "必須填寫分類名稱",
@@ -301,6 +332,11 @@
     "connectionStatus": {
       "dht_nodes": "DHT 節點",
       "externalIp": "外部 IP 位置",
+      "fetch_geo_failed": "無法取得地理位置資訊",
+      "fetch_isp_failed": "無法取得ISP資訊",
+      "geo_details": "地理位置資訊",
+      "isp_details": "ISP資訊",
+      "noExternalIp": "無法從日誌中移除",
       "status": "連線狀態",
       "total_peer_connections": "活躍的用戶連接數"
     },
@@ -510,22 +546,46 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "標題過濾器",
-      "unread": "僅顯示未讀文章"
+    "feeds": {
+      "empty": {
+        "action": "新增 RSS 訂閱源",
+        "value": "未有註冊的RSS訂閱"
+      },
+      "filters": {
+        "title": "標題過濾器",
+        "unread": "僅顯示未讀文章"
+      },
+      "item": {
+        "author": "作者: {author}",
+        "category": "分類: {category}",
+        "feedName": "訂閱源名稱: {name}"
+      },
+      "markAllAsRead": "標記全部項目為已讀",
+      "markAsRead": "標註為已讀",
+      "promise": {
+        "error": "標記文章時發生錯誤",
+        "pending": "標記中...",
+        "success": "已標記 {n} 篇文章為已讀"
+      },
+      "refreshAllFeeds": "更新所有訂閱",
+      "refreshPromise": {
+        "error": "更新訂閱資訊時發生錯誤",
+        "pending": "正在更新…",
+        "success": "{n}條訂閱資訊已更新"
+      },
+      "title": "RSS 文章"
     },
-    "item": {
-      "author": "作者: {author}",
-      "category": "分類: {category}",
-      "feedName": "訂閱源名稱: {name}"
+    "rules": {
+      "empty": {
+        "action": "新增 RSS 規則",
+        "value": "未有配置的RSS規則"
+      },
+      "title": "RSS規則"
     },
-    "markAllAsRead": "標記全部項目為已讀",
-    "promise": {
-      "error": "標記文章時發生錯誤",
-      "pending": "標記中...",
-      "success": "已標記 {n} 篇文章為已讀"
-    },
-    "title": "RSS 文章"
+    "toggle": {
+      "feeds": "顯示訂閱資訊",
+      "rules": "顯示訂閱規則"
+    }
   },
   "searchEngine": {
     "filters": {
@@ -564,6 +624,15 @@
     "title": "搜尋種子"
   },
   "settings": {
+    "addons": {
+      "enhanced_edition": {
+        "auto_ban_bt_player_peer": "自動禁止BT用戶",
+        "auto_ban_unknown_peer": "自動禁止未知用戶",
+        "auto_update_trackers": "自動更新公開跟蹤器清單",
+        "public_trackers": "公開跟蹤器",
+        "trackers_list_url": "自定義跟蹤器連結清單"
+      }
+    },
     "advanced": {
       "libtorrent": {
         "announceAllTiers": "總是發佈到所有追蹤者群組",
@@ -822,34 +891,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "新增訂閱",
-        "noFeeds": "尚無訂閱",
-        "refreshAll": "重新整理全部"
+      "autoDownloader": {
+        "enable": "啟用 RSS 規則處理",
+        "subheader": "RSS 種子自動下載器"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "啟用 RSS 規則處理",
-          "subheader": "RSS 種子自動下載器"
-        },
-        "reader": {
-          "enableProcessing": "啟用抓取 RSS 訂閱",
-          "feedsRefreshInterval": "訂閱源更新區間",
-          "maximumArticlesPerFeed": "每個訂閱源的最大文章數",
-          "subheader": "RSS 閱讀器"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "下載 REPACK/PROPER 章節",
-          "filters": "過濾器",
-          "filtersHint": "每行一個",
-          "subheader": "RSS 智慧型章節過濾器"
-        },
-        "useIdForRssLinks": "在 RSS 文章連結中使用 ID"
+      "reader": {
+        "enableProcessing": "啟用抓取 RSS 訂閱",
+        "feedsRefreshInterval": "訂閱源更新區間",
+        "maximumArticlesPerFeed": "每個訂閱源的最大文章數",
+        "subheader": "RSS 閱讀器"
       },
-      "rules": {
-        "createNew": "新增規則",
-        "noRules": "尚無規則"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "下載 REPACK/PROPER 章節",
+        "filters": "過濾器",
+        "filtersHint": "每行一個",
+        "subheader": "RSS 智慧型章節過濾器"
+      },
+      "useIdForRssLinks": "在 RSS 文章連結中使用 ID"
     },
     "saveSuccess": "設定儲存成功！",
     "speed": {
@@ -875,17 +933,15 @@
       "upload": "上傳"
     },
     "tabs": {
+      "addons": {
+        "enhanced_edition": "加強版"
+      },
       "advanced": "進階",
       "behavior": "行為",
       "bittorrent": "BitTorrent",
       "connection": "連線",
       "downloads": "下載",
-      "rss": {
-        "feeds": "訂閱源",
-        "general": "一般",
-        "rules": "規則",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "速率",
       "tagsAndCategories": "標籤和分類",
       "vuetorrent": {
@@ -910,21 +966,27 @@
     "title": "設定",
     "vuetorrent": {
       "general": {
+        "backendUrl": "後端URL",
         "canvasRefreshThreshold": "種子分塊閾值以禁用 Canvas 自動更新",
         "canvasRenderThreshold": "種子分塊閾值以禁用 Canvas 渲染",
         "check_new": "檢查新版本",
         "currentVersion": "當前版本",
         "customTitle": "自訂標題",
+        "darkVariants": "深色界面式樣",
         "dateFormat": "日期格式",
         "download": "匯出設定",
+        "enableHashColors": "啟用自動生成的卡片顏色",
+        "enableRatioColors": "啟用彩色的分享率",
         "fileContentInterval": "種子檔案內容更新區間",
         "hideChipIfUnset": "未設置時隱藏塊",
+        "hideColoredChip": "為卡片使用文本模式",
         "historySize": "符合條件欄位的歷史大小",
         "import": "匯入設定",
         "isDrawerRight": "側邊欄居右顯示",
         "isPaginationOnTop": "分頁欄於頂部顯示",
         "isShutdownButtonVisible": "顯示結束按鈕",
         "language": "語言",
+        "lightVariants": "淺色界面式樣",
         "openSideBarOnStart": "啟動時顯示側邊欄",
         "paginationSize": {
           "infinite_scroll": "無限滾動",
@@ -1022,6 +1084,7 @@
       "pending": "正在傳送種子...",
       "success": "已添加 {n} 個種子 | 已添加 {n} 個種子"
     },
+    "backend_unreachable": "後端無法訪問",
     "copy": {
       "error": "無法複製，當前環境不安全!",
       "success": "已複製到剪貼簿!"
@@ -1030,9 +1093,12 @@
       "not_supported": "當前環境不安全，無法註冊處理器。",
       "registered": "磁力連結處理器已註冊。"
     },
-    "new_version": "新版本已發佈!",
     "qbit": {
       "not_supported": "僅適用於 qbit >= {version}"
+    },
+    "version": {
+      "latest": "你已經在使用最新版本了!",
+      "new": "新版本已發佈!"
     }
   },
   "topbar": {
@@ -1101,19 +1167,17 @@
         "newPeersPlaceholder": "主機:埠",
         "title": "新增用戶"
       },
-      "emptyList": "當前無已連接的用戶",
-      "table": {
+      "empty": "當前無已連接的用戶",
+      "fields": {
         "client": "客戶端",
-        "connection": "連線",
-        "downloaded": "已下載",
-        "downloadSpeed": "下載速率",
+        "country": "國家和地區",
+        "download": "下載",
         "files": "檔案",
         "flags": "旗標",
         "host": "主機",
         "progress": "進度",
         "relevance": "關聯",
-        "uploaded": "已上傳",
-        "upSpeed": "上傳速率"
+        "upload": "上傳"
       }
     },
     "tabs": {
@@ -1169,13 +1233,14 @@
       "download_speed": "下載速率",
       "empty_category": "(無分類)",
       "empty_tags": "(無標籤)",
-      "empty_tracker_domain": "(無追蹤者)",
+      "empty_tracker": "(無追蹤者)",
       "eta": "預估剩餘時間",
       "f_l_piece_prio": "首末塊優先",
       "forced": "強制狀態",
       "global_speed": "全域速率",
       "global_volume": "全域大小",
       "hash": "雜湊值",
+      "inactive_seeding_time_limit": "閒置做種時間限制",
       "infohash_v1": "資訊雜湊值 v1",
       "infohash_v2": "資訊雜湊值 v2",
       "is_private": "私有种子",
@@ -1214,23 +1279,22 @@
       "upload_speed": "上傳速率"
     },
     "state": {
-      "allocating": "分配中",
-      "checkingDL": "正在檢查 (未完成)",
-      "checkingResumeData": "正在檢查復原資料",
-      "checkingUP": "正在檢查 (已完成)",
+      "checking_disk": "正在檢查硬碟中的檔案",
+      "checking_resume_data": "正在檢查復原資料",
+      "dl_forced": "[F] 下載中",
+      "dl_paused": "暫停",
+      "dl_queued": "排隊中 (下載)",
+      "dl_stalled": "停滞中",
       "downloading": "下載中",
       "error": "錯誤",
-      "forcedDL": "[F] 下載中",
-      "forcedUP": "[F] 上傳中",
-      "metaDL": "元資料",
-      "missingFiles": "缺失檔案",
+      "forced_meta_download": "[F]元數據",
+      "meta_download": "元資料",
+      "missing_files": "缺失檔案",
       "moving": "正在移動",
-      "pausedDL": "暫停",
-      "pausedUP": "已完成",
-      "queuedDL": "排隊中 (下載)",
-      "queuedUP": "排隊中 (上傳)",
-      "stalledDL": "停滞中",
-      "stalledUP": "做種中",
+      "ul_forced": "[F] 上傳中",
+      "ul_paused": "已完成",
+      "ul_queued": "排隊中 (上傳)",
+      "ul_stalled": "做種中",
       "unknown": "未知",
       "uploading": "上傳中"
     }

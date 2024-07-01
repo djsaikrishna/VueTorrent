@@ -6,12 +6,16 @@
     "delete": "Usuń",
     "disable": "Wyłącz",
     "disabled": "Wyłączone",
+    "edit": "Edytuj",
     "emptyList": "Nic tu nie ma do zobaczenia!",
     "NA": "Nie dotyczy",
     "no": "Nie",
     "none": "(Brak)",
     "ok": "OK",
+    "pause": "Pauza",
+    "resume": "Wznów",
     "save": "Zapisz",
+    "search": "Szukaj",
     "selectAll": "Zaznacz wszystko",
     "selectNone": "Wybierz Brak",
     "useGlobalSettings": "Użyj ustawień globalnych",
@@ -191,12 +195,12 @@
     "sortBy": {
       "added_on": "Dodano",
       "amount_left": "Pozostała ilość",
-      "auto_tmm": "Automatyczny TMM",
       "availability": "Dostępność",
+      "available_peers": "Peery (rój)",
+      "available_seeds": "Seedy (rój)",
       "avg_download_speed": "Średnia prędkość pobierania",
       "avg_upload_speed": "Średnia prędkość wysyłania",
       "category": "Kategoria",
-      "completed": "Zakończone",
       "completion_on": "Zakończone",
       "content_path": "Ścieżka zawartości",
       "default": "Domyślny",
@@ -206,8 +210,6 @@
       "downloaded_session": "Pobrane (sesja)",
       "download_path": "Ścieżka pobierania",
       "eta": "Czas przewidywany",
-      "f_l_piece_prio": "Pierwszy/ostatni priorytet części",
-      "force_start": "Wymuś rozpoczęcie",
       "globalSpeed": "Prędkość globalna",
       "globalVolume": "Globalny wolumen",
       "hash": "Hash",
@@ -230,10 +232,8 @@
       "seeding_time": "Czas seedowania",
       "seeding_time_limit": "Limit czasu seedowania",
       "seen_complete": "Widziane jako kompletne",
-      "seq_dl": "Pobieranie sekwencyjne",
       "size": "Rozmiar",
       "state": "Stan",
-      "super_seeding": "Super Seedowanie",
       "tags": "Tagi",
       "time_active": "Czas aktywności",
       "total_size": "Całkowity rozmiar",
@@ -510,22 +510,32 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "Filtr tytułów",
-      "unread": "Pokaż tylko nieprzeczytane artykuły"
+    "feeds": {
+      "empty": {
+        "action": "Utwórz kanał RSS"
+      },
+      "filters": {
+        "title": "Filtr tytułów",
+        "unread": "Pokaż tylko nieprzeczytane artykuły"
+      },
+      "item": {
+        "author": "Autor: {author}",
+        "category": "Kategoria: {category}",
+        "feedName": "Nazwa kanału: {name}"
+      },
+      "markAllAsRead": "Oznacz wszystkie jako przeczytane",
+      "promise": {
+        "error": "Wystąpił błąd podczas oznaczania artykułów",
+        "pending": "Oznaczanie...",
+        "success": "Oznaczono jako przeczytane {n} artykułów"
+      },
+      "title": "Artykuły RSS"
     },
-    "item": {
-      "author": "Autor: {author}",
-      "category": "Kategoria: {category}",
-      "feedName": "Nazwa kanału: {name}"
-    },
-    "markAllAsRead": "Oznacz wszystkie jako przeczytane",
-    "promise": {
-      "error": "Wystąpił błąd podczas oznaczania artykułów",
-      "pending": "Oznaczanie...",
-      "success": "Oznaczono jako przeczytane {n} artykułów"
-    },
-    "title": "Artykuły RSS"
+    "rules": {
+      "empty": {
+        "action": "Utwórz regułę RSS"
+      }
+    }
   },
   "searchEngine": {
     "filters": {
@@ -822,34 +832,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "Dodaj kanał",
-        "noFeeds": "Brak kanałów informacyjnych",
-        "refreshAll": "Odśwież wszystko"
+      "autoDownloader": {
+        "enable": "Włącz przetwarzanie reguł RSS",
+        "subheader": "Automatyczne pobieranie torrentów RSS"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "Włącz przetwarzanie reguł RSS",
-          "subheader": "Automatyczne pobieranie torrentów RSS"
-        },
-        "reader": {
-          "enableProcessing": "Włącz pobieranie kanałów RSS",
-          "feedsRefreshInterval": "Interwał odświeżania kanałów",
-          "maximumArticlesPerFeed": "Maksymalna liczba artykułów na kanał",
-          "subheader": "Czytnik RSS"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "Pobierz odcinki REPACK/PROPER",
-          "filters": "Filtry",
-          "filtersHint": "Jeden na linię",
-          "subheader": "Filtr inteligentnych odcinków RSS"
-        },
-        "useIdForRssLinks": "Użyj identyfikatora linku do artykułu RSS"
+      "reader": {
+        "enableProcessing": "Włącz pobieranie kanałów RSS",
+        "feedsRefreshInterval": "Interwał odświeżania kanałów",
+        "maximumArticlesPerFeed": "Maksymalna liczba artykułów na kanał",
+        "subheader": "Czytnik RSS"
       },
-      "rules": {
-        "createNew": "Utwórz regułę",
-        "noRules": "Nie ma jeszcze żadnych zasad"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "Pobierz odcinki REPACK/PROPER",
+        "filters": "Filtry",
+        "filtersHint": "Jeden na linię",
+        "subheader": "Filtr inteligentnych odcinków RSS"
+      },
+      "useIdForRssLinks": "Użyj identyfikatora linku do artykułu RSS"
     },
     "saveSuccess": "Ustawienia zapisane!",
     "speed": {
@@ -880,12 +879,7 @@
       "bittorrent": "BitTorrent",
       "connection": "Połączenie",
       "downloads": "Pobrania",
-      "rss": {
-        "feeds": "Kanały RSS",
-        "general": "Ogólne",
-        "rules": "Zasady",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "Prędkość",
       "tagsAndCategories": "Tagi i kategorie",
       "vuetorrent": {
@@ -1030,9 +1024,11 @@
       "not_supported": "Bieżący kontekst nie jest zabezpieczony. Nie można zarejestrować obsługi.",
       "registered": "Zarejestrowano obsługę magnet'ów."
     },
-    "new_version": "Nowa wersja dostępna!",
     "qbit": {
       "not_supported": "Dostępne tylko dla qbit >= {version}"
+    },
+    "version": {
+      "new": "Nowa wersja dostępna!"
     }
   },
   "topbar": {
@@ -1100,19 +1096,15 @@
         "newPeersPlaceholder": "adres_hosta:port",
         "title": "Dodaj peer'ów"
       },
-      "emptyList": "Obecnie brak połączonych peer'ów",
-      "table": {
+      "empty": "Obecnie brak połączonych peer'ów",
+      "fields": {
         "client": "Klient",
-        "connection": "Połączenie",
-        "downloaded": "Pobrano",
-        "downloadSpeed": "Pobieranie",
-        "files": "Pliki",
+        "download": "Pobieranie",
         "flags": "Flagi",
         "host": "Host",
         "progress": "Postęp",
         "relevance": "Trafność",
-        "uploaded": "Przesłane",
-        "upSpeed": "Przesyłanie"
+        "upload": "Wysyłanie"
       }
     },
     "tabs": {
@@ -1165,13 +1157,14 @@
       "download_speed": "Prędkość pobierania",
       "empty_category": "(brak kategorii)",
       "empty_tags": "(brak tagów)",
-      "empty_tracker_domain": "(brak trackera)",
+      "empty_tracker": "(brak trackera)",
       "eta": "Czas przewidywany",
       "f_l_piece_prio": "Priorytet pierwszej/ostatniej części",
       "forced": "Stan wymuszony",
       "global_speed": "Prędkość globalna",
       "global_volume": "Globalny wolumen",
       "hash": "Suma kontrolna",
+      "inactive_seeding_time_limit": "Limit czasu nieaktywnego seedowania",
       "infohash_v1": "Infohash v1",
       "infohash_v2": "Infohash v2",
       "last_activity": "Ostatnia aktywność",
@@ -1205,23 +1198,20 @@
       "upload_speed": "Prędkość wysyłania"
     },
     "state": {
-      "allocating": "Przydzielanie",
-      "checkingDL": "Sprawdzanie (niekompletne)",
-      "checkingResumeData": "Sprawdzanie danych do wznowienia",
-      "checkingUP": "Sprawdzanie (zakończone)",
+      "checking_resume_data": "Sprawdzanie danych do wznowienia",
+      "dl_forced": "[W] Pobieranie",
+      "dl_paused": "Wstrzymano",
+      "dl_queued": "W kolejce (pobieranie)",
+      "dl_stalled": "Zatrzymany",
       "downloading": "Pobieranie",
       "error": "Błąd",
-      "forcedDL": "[W] Pobieranie",
-      "forcedUP": "[W] Wysyłanie",
-      "metaDL": "Metadane",
-      "missingFiles": "Brakujące pliki",
+      "meta_download": "Metadane",
+      "missing_files": "Brakujące pliki",
       "moving": "Przenoszenie",
-      "pausedDL": "Wstrzymano",
-      "pausedUP": "Zakończono",
-      "queuedDL": "W kolejce (pobieranie)",
-      "queuedUP": "W kolejce (wysyłanie)",
-      "stalledDL": "Zatrzymany",
-      "stalledUP": "Seedowanie",
+      "ul_forced": "[W] Wysyłanie",
+      "ul_paused": "Zakończono",
+      "ul_queued": "W kolejce (wysyłanie)",
+      "ul_stalled": "Seedowanie",
       "unknown": "Nieznany",
       "uploading": "Wysyłanie"
     }

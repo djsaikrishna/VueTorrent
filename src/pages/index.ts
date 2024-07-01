@@ -13,7 +13,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     name: 'rssArticles',
-    path: '/rss',
+    path: '/rss/:tab?/:feedId?',
     component: () => import('./RssArticles.vue')
   },
   {
@@ -34,10 +34,8 @@ export const routes: RouteRecordRaw[] = [
   {
     name: 'magnetHandler',
     path: '/magnet/:url',
-    component: () => import('./MagnetHandler.vue'),
-    meta: {
-      public: true
-    }
+    alias: '/download=:url',
+    component: () => import('./MagnetHandler.vue')
   },
   {
     name: 'login',

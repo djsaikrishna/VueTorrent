@@ -29,11 +29,11 @@ export const useDashboardStore = defineStore(
 
         return t('dashboard.selectedTorrentsCount', {
           count: selectedTorrents.value.length,
-          total: torrentStore.filteredTorrents.length,
+          total: torrentStore.processedTorrents.length,
           size: formatData(selectedSize, vuetorrentStore.useBinarySize)
         })
       } else {
-        return t('dashboard.torrentsCount', torrentStore.filteredTorrents.length)
+        return t('dashboard.torrentsCount', torrentStore.processedTorrents.length)
       }
     })
 
@@ -77,7 +77,7 @@ export const useDashboardStore = defineStore(
 
       const start = Math.min(endIndex, latestIndex)
       const end = Math.max(endIndex, latestIndex)
-      const hashes = torrentStore.filteredTorrents.slice(start, end + 1).map(t => t.hash)
+      const hashes = torrentStore.processedTorrents.slice(start, end + 1).map(t => t.hash)
       selectTorrents(...hashes)
     }
 
@@ -98,7 +98,7 @@ export const useDashboardStore = defineStore(
     })
 
     watch(
-      () => torrentStore.filteredTorrents,
+      () => torrentStore.processedTorrents,
       newValue => {
         const pageCount = Math.ceil(newValue.length / vuetorrentStore.paginationSize)
         if (pageCount < currentPage.value) {
@@ -132,15 +132,9 @@ export const useDashboardStore = defineStore(
     }
   },
   {
-    persist: {
+    persistence: {
       enabled: true,
-      strategies: [
-        {
-          storage: localStorage,
-          key: 'vuetorrent_dashboard',
-          paths: ['displayMode']
-        }
-      ]
+      storageItems: [{ storage: localStorage, includePaths: ['displayMode'] }]
     }
   }
 )

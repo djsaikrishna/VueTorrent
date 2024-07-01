@@ -6,12 +6,16 @@
     "delete": "삭제",
     "disable": "비활성",
     "disabled": "비활성화",
+    "edit": "편집",
     "emptyList": "이 곳은 비어있습니다!",
     "NA": "N/A",
     "no": "아니요",
     "none": "(없음)",
     "ok": "확인",
+    "pause": "일시 중지",
+    "resume": "이어하기",
     "save": "저장",
+    "search": "검색",
     "selectAll": "모두 선택",
     "selectNone": "선택 안함",
     "useGlobalSettings": "전역 설정 사용",
@@ -191,12 +195,12 @@
     "sortBy": {
       "added_on": "추가 날짜",
       "amount_left": "남은 양",
-      "auto_tmm": "자동 TMM",
       "availability": "가용성",
+      "available_peers": "피어(Swarm)",
+      "available_seeds": "시드 (Swarm)",
       "avg_download_speed": "평균 다운로드 속도",
       "avg_upload_speed": "평균 업로드 속도",
       "category": "카테고리",
-      "completed": "완료됨",
       "completion_on": "완료 날짜",
       "content_path": "컨텐츠 경로",
       "default": "기본값",
@@ -206,8 +210,6 @@
       "downloaded_session": "다운로드됨 (세션)",
       "download_path": "다운로드 경로",
       "eta": "남은 예상 시간",
-      "f_l_piece_prio": "우선순위",
-      "force_start": "강제 시작",
       "globalSpeed": "전역 속도",
       "globalVolume": "전체 볼륨",
       "hash": "Hash",
@@ -230,10 +232,8 @@
       "seeding_time": "시딩 시간",
       "seeding_time_limit": "시딩 시간 제한",
       "seen_complete": "완료됨",
-      "seq_dl": "순차 다운로드",
       "size": "크기",
       "state": "상태",
-      "super_seeding": "슈퍼 시딩",
       "tags": "태그",
       "time_active": "활성 시간",
       "total_size": "총 크기",
@@ -488,22 +488,32 @@
     }
   },
   "rssArticles": {
-    "filters": {
-      "title": "제목 필터",
-      "unread": "읽지 않은 피드만 표시"
+    "feeds": {
+      "empty": {
+        "action": "RSS 피드 생성"
+      },
+      "filters": {
+        "title": "제목 필터",
+        "unread": "읽지 않은 피드만 표시"
+      },
+      "item": {
+        "author": "작성자: {author}",
+        "category": "카테고리: {category}",
+        "feedName": "피드 이름: {name}"
+      },
+      "markAllAsRead": "모두 읽음으로 표시",
+      "promise": {
+        "error": "피드를 표시하는 동안 오류가 발생했습니다.",
+        "pending": "표시 중...",
+        "success": "{n}개의 기사를 읽음으로 표시함"
+      },
+      "title": "RSS 피드"
     },
-    "item": {
-      "author": "작성자: {author}",
-      "category": "카테고리: {category}",
-      "feedName": "피드 이름: {name}"
-    },
-    "markAllAsRead": "모두 읽음으로 표시",
-    "promise": {
-      "error": "피드를 표시하는 동안 오류가 발생했습니다.",
-      "pending": "표시 중...",
-      "success": "{n}개의 기사를 읽음으로 표시함"
-    },
-    "title": "RSS 피드"
+    "rules": {
+      "empty": {
+        "action": "RSS 규칙 생성"
+      }
+    }
   },
   "searchEngine": {
     "filters": {
@@ -800,34 +810,23 @@
       }
     },
     "rss": {
-      "feeds": {
-        "createNew": "피드 추가",
-        "noFeeds": "아직 피드가 없습니다",
-        "refreshAll": "모두 새로고침"
+      "autoDownloader": {
+        "enable": "RSS 규칙 처리 활성화",
+        "subheader": "RSS 토렌트 자동 다운로더"
       },
-      "general": {
-        "autoDownloader": {
-          "enable": "RSS 규칙 처리 활성화",
-          "subheader": "RSS 토렌트 자동 다운로더"
-        },
-        "reader": {
-          "enableProcessing": "RSS 피드 가져오기 활성화",
-          "feedsRefreshInterval": "피드 새로고침 간격",
-          "maximumArticlesPerFeed": "피드 당 수집할 최대 기사 수",
-          "subheader": "RSS 리더"
-        },
-        "smartEpisodeFilter": {
-          "downloadEpisodes": "REPACK/PROPER 에피소드 다운로드",
-          "filters": "필터",
-          "filtersHint": "한 줄에 하나씩",
-          "subheader": "RSS Smart episode 필터"
-        },
-        "useIdForRssLinks": "RSS 피드에 ID사용"
+      "reader": {
+        "enableProcessing": "RSS 피드 가져오기 활성화",
+        "feedsRefreshInterval": "피드 새로고침 간격",
+        "maximumArticlesPerFeed": "피드 당 수집할 최대 기사 수",
+        "subheader": "RSS 리더"
       },
-      "rules": {
-        "createNew": "규칙 생성",
-        "noRules": "아직 규칙이 없습니다"
-      }
+      "smartEpisodeFilter": {
+        "downloadEpisodes": "REPACK/PROPER 에피소드 다운로드",
+        "filters": "필터",
+        "filtersHint": "한 줄에 하나씩",
+        "subheader": "RSS Smart episode 필터"
+      },
+      "useIdForRssLinks": "RSS 피드에 ID사용"
     },
     "saveSuccess": "설정이 저장되었습니다!",
     "speed": {
@@ -858,12 +857,7 @@
       "bittorrent": "BitTorrent",
       "connection": "연결수",
       "downloads": "다운로드",
-      "rss": {
-        "feeds": "피드",
-        "general": "일반",
-        "rules": "규칙",
-        "title": "RSS"
-      },
+      "rss": "RSS",
       "speed": "속도",
       "tagsAndCategories": "태그 및 카테고리",
       "vuetorrent": {
@@ -1008,9 +1002,11 @@
       "not_supported": "현재 응답이 안전하지 않습니다. 핸들러를 등록할 수 없습니다.",
       "registered": "마그넷 핸들러가 등록되었습니다."
     },
-    "new_version": "새 버전을 사용할 수 있습니다!",
     "qbit": {
       "not_supported": "qBittorrent >= {version}에서만 사용할 수 있습니다."
+    },
+    "version": {
+      "new": "새 버전을 사용할 수 있습니다!"
     }
   },
   "topbar": {
@@ -1078,19 +1074,15 @@
         "newPeersPlaceholder": "host:port",
         "title": "피어 추가"
       },
-      "emptyList": "현재 연결된 피어가 없습니다",
-      "table": {
+      "empty": "현재 연결된 피어가 없습니다",
+      "fields": {
         "client": "클라이언트",
-        "connection": "연결",
-        "downloaded": "다운로드됨",
-        "downloadSpeed": "다운로드 속도",
-        "files": "파일",
+        "download": "다운로드",
         "flags": "플래그",
         "host": "호스트",
         "progress": "진행 상황",
         "relevance": "관련성",
-        "uploaded": "업로드됨",
-        "upSpeed": "업로드 속도"
+        "upload": "업로드"
       }
     },
     "tabs": {
@@ -1143,7 +1135,7 @@
       "download_speed": "다운로드 속도",
       "empty_category": "카테고리 없음",
       "empty_tags": "태그 없음",
-      "empty_tracker_domain": "(트래커 없음)",
+      "empty_tracker": "(트래커 없음)",
       "eta": "남은 예상 시간",
       "f_l_piece_prio": "우선순위",
       "forced": "강제 상태",
@@ -1182,23 +1174,20 @@
       "upload_speed": "업로드 속도"
     },
     "state": {
-      "allocating": "할당",
-      "checkingDL": "확인 중(미완료)",
-      "checkingResumeData": "재개 데이터 확인 중",
-      "checkingUP": "확인(완료)",
+      "checking_resume_data": "재개 데이터 확인 중",
+      "dl_forced": "[강제] 다운로드 중",
+      "dl_paused": "일시 중지됨",
+      "dl_queued": "대기 중 (다운로드)",
+      "dl_stalled": "정지됨",
       "downloading": "다운로드 중",
       "error": "오류",
-      "forcedDL": "[강제] 다운로드 중",
-      "forcedUP": "[강제] 업로드 중",
-      "metaDL": "메타데이터",
-      "missingFiles": "누락된 파일",
+      "meta_download": "메타데이터",
+      "missing_files": "누락된 파일",
       "moving": "이동",
-      "pausedDL": "일시 중지됨",
-      "pausedUP": "완료됨",
-      "queuedDL": "대기 중 (다운로드)",
-      "queuedUP": "대기 중 (업로드)",
-      "stalledDL": "정지됨",
-      "stalledUP": "시딩 중",
+      "ul_forced": "[강제] 업로드 중",
+      "ul_paused": "완료됨",
+      "ul_queued": "대기 중 (업로드)",
+      "ul_stalled": "시딩 중",
       "unknown": "알 수 없음",
       "uploading": "업로드 중"
     }

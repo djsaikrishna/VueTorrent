@@ -1,6 +1,8 @@
-import { useVueTorrentStore } from './vuetorrent'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { useVueTorrentStore } from './vuetorrent'
+
+const GRAPH_SIZE = 15
 
 export const useNavbarStore = defineStore(
   'navbar',
@@ -9,9 +11,9 @@ export const useNavbarStore = defineStore(
 
     const isDrawerOpen = ref(vueTorrentStore.openSideBarOnStart)
 
-    const _timeData = ref<(number | null)[]>(new Array(15).fill(null))
-    const _downloadData = ref<(number | null)[]>(new Array(15).fill(null))
-    const _uploadData = ref<(number | null)[]>(new Array(15).fill(null))
+    const _timeData = ref<number[]>(new Array(GRAPH_SIZE).fill(new Date().getTime()))
+    const _downloadData = ref<number[]>(new Array(GRAPH_SIZE).fill(0))
+    const _uploadData = ref<number[]>(new Array(GRAPH_SIZE).fill(0))
 
     const downloadData = computed(() => _timeData.value.map((e, i) => [e, _downloadData.value[i]]))
     const uploadData = computed(() => _timeData.value.map((e, i) => [e, _uploadData.value[i]]))
@@ -21,14 +23,14 @@ export const useNavbarStore = defineStore(
       _timeData.value.push(new Date().getTime())
     }
 
-    function pushDownloadData(data: number) {
+    function pushDownloadData(data?: number) {
       _downloadData.value.shift()
-      _downloadData.value.push(data)
+      _downloadData.value.push(data ?? 0)
     }
 
-    function pushUploadData(data: number) {
+    function pushUploadData(data?: number) {
       _uploadData.value.shift()
-      _uploadData.value.push(data)
+      _uploadData.value.push(data ?? 0)
     }
 
     return {
@@ -39,20 +41,16 @@ export const useNavbarStore = defineStore(
       pushDownloadData,
       pushUploadData,
       $reset: () => {
-        _downloadData.value = new Array(15).fill(null)
-        _uploadData.value = new Array(15).fill(null)
+        _timeData.value = new Array(GRAPH_SIZE).fill(new Date().getTime())
+        _downloadData.value = new Array(GRAPH_SIZE).fill(0)
+        _uploadData.value = new Array(GRAPH_SIZE).fill(0)
       }
     }
   },
   {
-    persist: {
+    persistence: {
       enabled: true,
-      strategies: [
-        {
-          storage: sessionStorage,
-          key: 'vuetorrent_navbar'
-        }
-      ]
+      storageItems: [{ storage: sessionStorage }]
     }
   }
 )
